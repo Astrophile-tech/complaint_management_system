@@ -13,9 +13,9 @@ import {
   Paper,
 } from "@mui/material";
 
-function MyComplaints() {
-  const complaints = [
-    { id: 101, title: "Network Issue", status: "Pending" },
+function MyComplaints({ complaints = [] }) {
+  const complaintsToShow = complaints.length > 0 ? complaints : [
+    { id: 101, title: 'Network Issue', status: 'Pending' },
     { id: 102, title: "Water Leakage", status: "In Progress" },
     { id: 103, title: "Street Light Damage", status: "Resolved" },
   ];
