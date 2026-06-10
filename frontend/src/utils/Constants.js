@@ -17,9 +17,9 @@ const BAR_COLORS = ["#3B82F6","#F59E0B","#10B981","#EF4444","#8B5CF6","#EC4899",
 
 // ─── Seed Data ─────────────────────────────────────────────────────────────────
 const INIT_USERS = [
-  { id:"u1", name:"Arjun Menon",  email:"arjun@college.edu",  password:"pass123",  role:"student" },
-  { id:"u2", name:"Priya Nair",   email:"priya@college.edu",  password:"pass123",  role:"student" },
-  { id:"u3", name:"Admin Kumar",  email:"admin@college.edu",  password:"admin123", role:"admin"   },
+  { id:"u1", name:"Nandana",  email:"nandana@college.edu",  password:"pass123",  role:"student" },
+  { id:"u2", name:"Jobin",   email:"jobin@college.edu",  password:"pass123",  role:"student" },
+  { id:"u3", name:"Admin",  email:"admin@college.edu",  password:"admin123", role:"admin"   },
 ];
 
 const today = () => new Date().toISOString().split("T")[0];

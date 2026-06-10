@@ -9,21 +9,25 @@ import ComplaintStatus from './components/ComplaintStatus';
 import AdminDashboard from './components/adminDashboard';
 import StudentDashboard from './components/studentDashboard';
 import SubmitComplaint from './components/SubmitComplaint';
-import { INIT_USERS, INIT_COMPLAINTS } from './utils/Constants';
+import { INIT_USERS,INIT_COMPLAINTS } from './utils/Constants';
+import Login from './components/LOGIN';
+import DashboardLayout from './components/DashboardLayout';
+import Register from './components/Register';
 
 const App = () => {
   const location = useLocation();
-  const role = location.pathname.startsWith('/admin') ? 'admin' : 'student';
-  const users = INIT_USERS;
+  const role=location.pathname.startsWith('/admin') ? 'admin' : 'student';
   const complaints = INIT_COMPLAINTS;
-  const currentStudent = users.find(user => user.role === 'student') ?? users[0];
-
+  const user = INIT_USERS;
+  const currentStudent=user.find(user=>user.role==="student") ?? user[0];
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#F7FAFC' }}>
-      <Sidebar role={role} />
-      <Box component="main" sx={{ flex: 1, p: { xs: 2, md: 3 } }}>
+    
         <Routes>
-          <Route path="/admindash" element={<AdminDashboard complaints={complaints} users={users} />} />
+          <Route path="/login" element={<Login/>} />
+          <Route path="/register" element={<Register/>} />
+
+          <Route element={<DashboardLayout />}>
+          <Route path="/admindash" element={<AdminDashboard user={user} complaints={complaints} />} />
           <Route path="/studentdash" element={<StudentDashboard user={currentStudent} complaints={complaints} />} />
           <Route path="/submit" element={<SubmitComplaint />} />
           <Route path="/complaint-details/:id" element={<ComplaintDetails />} />
@@ -31,9 +35,11 @@ const App = () => {
           <Route path="/details" element={<ComplaintDetails />} />
           <Route path="/status" element={<ComplaintStatus />} />
           <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="/" element={<Navigate to="/login" />} />
+          </Route>
+          
         </Routes>
-      </Box>
-    </Box>
+      
   );
 }
 

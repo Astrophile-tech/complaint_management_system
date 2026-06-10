@@ -6,10 +6,10 @@ function MyComplaints() {
   const navigate = useNavigate();
   const [complaints, setComplaints] = useState([]);
 
-  // CHANGE 1: Read from localStorage instead of Constants.js
+  //  Read from localStorage 
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem('complaints') || '[]');
-    setComplaints(stored); // This will have E1, E2, E3...
+    setComplaints(stored);
   }, []);
 
   const getStatusColor = (status) => {
@@ -20,14 +20,7 @@ function MyComplaints() {
 
   return (
     <Box sx={{ p: 3 }}>
-      <Box sx={{ 
-        bgcolor: '#1976d2', 
-        color: 'white', 
-        p: 3, 
-        mb: 3, 
-        borderRadius: 2,
-        boxShadow: 2
-      }}>
+      <Box sx={{ bgcolor: '#1976d2',  color: 'white',  p: 3, mb: 3, borderRadius: 2,boxShadow: 2 }}>
         <Typography variant="h5" mb={1}>My Complaints</Typography>
         <Typography variant="body2">
           Total complaints: {complaints.length}
