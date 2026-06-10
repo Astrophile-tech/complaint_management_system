@@ -39,8 +39,8 @@ function Sidebar({ role }) {
         {items.map(item => (
           <ListItem key={item.id} disablePadding>
             <ListItemButton
-              component={NavLink}
-              to={item.path}
+              component={NavLink}       
+              to={item.path}         
               end
               sx={{ '&.active .MuiListItemText-primary': { fontWeight: 700 } }}
             >

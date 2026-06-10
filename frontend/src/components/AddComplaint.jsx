@@ -1,13 +1,15 @@
 import React from 'react'
-import { AppBar, Toolbar, Typography,Container,Box, Grid, MenuItem ,} from '@mui/material';
+import { AppBar, Toolbar, Typography,Container,Box, Grid, MenuItem, Card ,} from '@mui/material';
 import TextField from '@mui/material/TextField';
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 
 const AddComplaint = () => {
   const [category, setCategory] = useState('');
+  const [status, setStatus] = useState('');
 
   return (
+    
     <div>
         <AppBar position="static" sx={{ backgroundColor: '#00324d' }}>
             <Toolbar>
@@ -16,10 +18,11 @@ const AddComplaint = () => {
                 </Typography>
             </Toolbar>
          </AppBar>
- <Typography variant="h6" sx={{ textAlign: 'left', ml: 3, mt: 2 , fontFamily: 'robotic',fontWeight: 'bold' }}>Complaint Submit Form</Typography>
+          <Typography variant="h6" sx={{ textAlign: 'left', ml: 3, mt: 2 , fontFamily: 'robotic',fontWeight: 'bold' }}>Complaint Submit Form</Typography>
 
- 
- <Grid container spacing={2} sx={{ mt: 1, ml: 3, mr: 3 }}>
+ <Card sx={{ mt: 2, ml: 3, mr: 3, p: 2 }}>
+  <CardContent>
+        <Grid container spacing={2} sx={{ mt: 1, ml: 3, mr: 3 }}>
   
   {/* Text field for complaint id */}
     <Grid item xs={12} sm={6}>
@@ -85,8 +88,8 @@ const AddComplaint = () => {
 </Typography>
 <TextField placeholder="date of submission"fullWidth variant="outlined" size="normal" />
 </Grid>
-
-
+</CardContent>
+</Card>
 {/* Button for submit ,edit,delete */}
 
 <br />
@@ -106,9 +109,12 @@ const AddComplaint = () => {
 
 </Grid>
 
+  
     </div>
   )
+ 
 }
+
 
 export default AddComplaint
     
