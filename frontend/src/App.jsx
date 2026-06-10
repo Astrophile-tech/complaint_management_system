@@ -26,8 +26,8 @@ const App = () => {
           <Route path="/admindash" element={<AdminDashboard complaints={complaints} users={users} />} />
           <Route path="/studentdash" element={<StudentDashboard user={currentStudent} complaints={complaints} />} />
           <Route path="/submit" element={<SubmitComplaint />} />
-          
-          <Route path="/" element={<MyComplaints complaints={complaints.filter(c => c.createdBy === currentStudent.id)} />} />
+          <Route path="/complaint-details/:id" element={<ComplaintDetails />} />
+          <Route path="/" element={<MyComplaints/>} />
           <Route path="/details" element={<ComplaintDetails />} />
           <Route path="/status" element={<ComplaintStatus />} />
           <Route path="*" element={<Navigate to="/" replace />} />
