@@ -12,12 +12,36 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 function MyComplaints() {
+  const navigate = useNavigate();
+
   const complaints = [
-    { id: 101, title: "Network Issue", status: "Pending" },
-    { id: 102, title: "Water Leakage", status: "In Progress" },
-    { id: 103, title: "Street Light Damage", status: "Resolved" },
+    {
+      id: 101,
+      title: "Network Issue",
+      category: "Technical",
+      description: "Internet connection is not working properly.",
+      dateSubmitted: "08-06-2026",
+      status: "Pending",
+    },
+    {
+      id: 102,
+      title: "Water Leakage",
+      category: "Maintenance",
+      description: "Water leaking from ceiling.",
+      dateSubmitted: "07-06-2026",
+      status: "In Progress",
+    },
+    {
+      id: 103,
+      title: "Street Light Damage",
+      category: "Infrastructure",
+      description: "Street light not working.",
+      dateSubmitted: "05-06-2026",
+      status: "Resolved",
+    },
   ];
 
   const getStatusColor = (status) => {
@@ -32,75 +56,51 @@ function MyComplaints() {
   };
 
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        backgroundColor: "#f5f7fa",
-        p: 4,
-      }}
-    >
-      <Card
-        sx={{
-          maxWidth: 1000,
-          mx: "auto",
-          borderRadius: 3,
-          boxShadow: 4,
-        }}
-      >
+    <Box sx={{ minHeight: "100vh", bgcolor: "#f4f6f8", p: 4 }}>
+      <Card sx={{ maxWidth: 1100, mx: "auto", borderRadius: 3, boxShadow: 5 }}>
         <CardContent>
-          <Typography
-            variant="h4"
-            fontWeight="bold"
-            color="primary"
-            gutterBottom
-          >
+          <Typography variant="h4" fontWeight="bold" color="primary" gutterBottom>
             My Complaints
           </Typography>
 
-          <Typography
-            variant="body1"
-            color="text.secondary"
-            sx={{ mb: 3 }}
-          >
-            View and track all complaints submitted by you.
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+            Click on a complaint to view full details
           </Typography>
 
-          <TableContainer component={Paper} elevation={0}>
+          <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
             <Table>
               <TableHead>
-                <TableRow sx={{ backgroundColor: "#f3f4f6" }}>
-                  <TableCell>
-                    <strong>Complaint ID</strong>
-                  </TableCell>
-                  <TableCell>
-                    <strong>Complaint Title</strong>
-                  </TableCell>
-                  <TableCell>
-                    <strong>Status</strong>
-                  </TableCell>
+                <TableRow sx={{ bgcolor: "#f0f0f0" }}>
+                  <TableCell><b>ID</b></TableCell>
+                  <TableCell><b>Title</b></TableCell>
+                  <TableCell><b>Category</b></TableCell>
+                  <TableCell><b>Status</b></TableCell>
                 </TableRow>
               </TableHead>
 
               <TableBody>
-                {complaints.map((complaint) => (
+                {complaints.map((c) => (
                   <TableRow
-                    key={complaint.id}
+                    key={c.id}
                     hover
+                    onClick={() =>
+                      navigate("/details", { state: c })
+                    }
                     sx={{
                       cursor: "pointer",
                       transition: "0.2s",
+                      "&:hover": { backgroundColor: "#f9fafb" },
                     }}
                   >
-                    <TableCell>{complaint.id}</TableCell>
-
-                    <TableCell>{complaint.title}</TableCell>
-
+                    <TableCell>{c.id}</TableCell>
+                    <TableCell>{c.title}</TableCell>
+                    <TableCell>{c.category}</TableCell>
                     <TableCell>
                       <Chip
-                        label={complaint.status}
-                        color={getStatusColor(complaint.status)}
+                        label={c.status}
+                        color={getStatusColor(c.status)}
                         size="small"
-                        sx={{ fontWeight: "bold" }}
+                        sx={{ fontWeight: 600 }}
                       />
                     </TableCell>
                   </TableRow>

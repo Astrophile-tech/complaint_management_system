@@ -8,52 +8,63 @@ import {
   StepLabel,
   Chip,
 } from "@mui/material";
+import { useLocation } from "react-router-dom";
 
 function ComplaintStatus() {
+  const location = useLocation();
+  const complaint = location.state;
+
   const steps = [
-    "Complaint Submitted",
+    "Submitted",
     "Under Review",
     "In Progress",
     "Resolved",
   ];
 
-  const activeStep = 2; // 0-based index (currently "In Progress")
+  const statusMap = {
+    Pending: 0,
+    "Under Review": 1,
+    "In Progress": 2,
+    Resolved: 3,
+  };
+
+  const activeStep = statusMap[complaint?.status] ?? 0;
+
+  if (!complaint) {
+    return (
+      <Box sx={{ p: 4 }}>
+        <Typography>No complaint data found.</Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box
       sx={{
         minHeight: "100vh",
-        backgroundColor: "#f5f7fa",
+        bgcolor: "#f4f6f8",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         p: 3,
       }}
     >
-      <Card
-        sx={{
-          width: "100%",
-          maxWidth: 800,
-          borderRadius: 3,
-          boxShadow: 4,
-        }}
-      >
+      <Card sx={{ width: "100%", maxWidth: 850, borderRadius: 3, boxShadow: 5 }}>
         <CardContent sx={{ p: 4 }}>
-          <Typography
-            variant="h4"
-            fontWeight="bold"
-            color="primary"
-            gutterBottom
-          >
-            Complaint Status
+          <Typography variant="h4" fontWeight="bold" color="primary">
+            Complaint Tracking
           </Typography>
 
-          <Typography
-            variant="body1"
-            color="text.secondary"
-            sx={{ mb: 4 }}
-          >
-            Track the current progress of your complaint.
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            Track real-time progress of your complaint
+          </Typography>
+
+          <Typography sx={{ mb: 1 }}>
+            <b>ID:</b> {complaint.id}
+          </Typography>
+
+          <Typography sx={{ mb: 3 }}>
+            <b>Title:</b> {complaint.title}
           </Typography>
 
           <Stepper activeStep={activeStep} alternativeLabel>
@@ -64,22 +75,11 @@ function ComplaintStatus() {
             ))}
           </Stepper>
 
-          <Box
-            sx={{
-              mt: 5,
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
+          <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
             <Chip
-              label="In Progress"
-              color="warning"
-              size="medium"
-              sx={{
-                fontWeight: "bold",
-                fontSize: "0.95rem",
-                px: 1,
-              }}
+              label={complaint.status}
+              color="primary"
+              sx={{ fontWeight: 600, px: 1 }}
             />
           </Box>
         </CardContent>
