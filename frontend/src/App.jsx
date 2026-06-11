@@ -25,20 +25,21 @@ const App = () => {
         <Routes>
           <Route path="/login" element={<Login/>} />
           <Route path="/register" element={<Register/>} />
-
+          <Route path="/" element={<Navigate to="/login" />} />
           <Route element={<DashboardLayout />}>
           <Route path="/admindash" element={<AdminDashboard user={user} complaints={complaints} />} />
           <Route path="/studentdash" element={<StudentDashboard user={currentStudent} complaints={complaints} />} />
           <Route path="/submit" element={<SubmitComplaint />} />
           <Route path="/complaint-details/:id" element={<ComplaintDetails />} />
-          <Route path="/" element={<MyComplaints/>} />
+          <Route path="/mycomplaints" element={<MyComplaints/>} />
           <Route path="/details" element={<ComplaintDetails />} />
           <Route path="/status" element={<ComplaintStatus />} />
           <Route path="*" element={<Navigate to="/" replace />} />
-          <Route path="/" element={<Navigate to="/login" />} />
+          
           </Route>
           
         </Routes>
+
       
   );
 }

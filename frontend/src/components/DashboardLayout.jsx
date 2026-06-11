@@ -1,6 +1,6 @@
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import { Box } from '@mui/material';
+import { Box, AppBar, Toolbar, Typography } from '@mui/material';
 import Sidebar from './Sidebar';
 
 const DashboardLayout = () => {
@@ -16,12 +16,21 @@ const DashboardLayout = () => {
   if (!user) return null; // Don't render while redirecting
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#F7FAFC' }}>
-      <Sidebar role={user.role.toLowerCase()} />
-      <Box component="main" sx={{ flex: 1, p: { xs: 2, md: 3 } }}>
-        <Outlet /> {/* Your dashboard pages render here */}
+    <>
+      <AppBar position="static" sx={{ bgcolor: '#0e1c2c' }}>
+        <Toolbar>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Playfair Display' }}>
+            CAMPUS COMPLAINT MANAGEMENT SYSTEM
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <Box sx={{ display: 'flex', minHeight: 'calc(100vh - 64px)', bgcolor: '#F7FAFC' }}>
+        <Sidebar role={user.role.toLowerCase()} />
+        <Box component="main" sx={{ flex: 1, p: { xs: 2, md: 3 } }}>
+          <Outlet /> {/* Your dashboard pages render here */}
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 

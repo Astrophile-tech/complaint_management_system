@@ -1,30 +1,29 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { 
-  Box, Button, TextField, Typography, Paper, MenuItem, Alert, Container 
+  AppBar, Box, Button, TextField, Typography, Paper, MenuItem, Alert, Container, FormControl, InputLabel, Select, Toolbar
 } from '@mui/material';
-import { INIT_USERS} from '../utils/Constants';
+
+
 const Register = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
-    role: 'student'
+    role: ''
   });
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError('');
-  };
+     const [error, setError] = useState('');
+      const [success, setSuccess] = useState('');
+      const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setError('');
+        };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     
     const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const allUsers = [...users, ...INIT_USERS]; // Combine with initial users
     
     // Check if email already exists
     if (users.find(u => u.email === formData.email)) {
@@ -46,7 +45,15 @@ const Register = () => {
   };
 
   return (
-    <Container maxWidth="sm">
+    <>
+      <AppBar position="static" sx={{ bgcolor: '#0e1c2c' }}>
+        <Toolbar>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Playfair Display' }}>
+            CAMPUS COMPLAINT MANAGEMENT SYSTEM
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <Container maxWidth="sm">
       <Paper elevation={3} sx={{ p: 4, mt: 8 }}>
         <Typography variant="h4" align="center" gutterBottom>
           Register
@@ -85,20 +92,19 @@ const Register = () => {
             margin="normal"
             required
           />
-          <TextField
-            fullWidth
-            select
-            label="Role"
-            name="role"
-            value={formData.role}
-            onChange={handleChange}
-            margin="normal"
-            required
-          >
-            <MenuItem value="Student">Student</MenuItem>
-            <MenuItem value="Admin">Admin</MenuItem>
-          </TextField>
-          
+<FormControl fullWidth margin="normal">
+  <InputLabel>Role</InputLabel>
+  <Select
+    name="role"
+    value={formData.role}
+    onChange={handleChange}
+    label="Role"
+  >
+    <MenuItem value="student">student</MenuItem>
+    <MenuItem value="admin">admin</MenuItem>
+  </Select>
+</FormControl>
+     
           <Button
             type="submit"
             fullWidth
@@ -117,6 +123,7 @@ const Register = () => {
         </Box>
       </Paper>
     </Container>
+    </>
   );
 };
 

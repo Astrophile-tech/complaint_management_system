@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { 
-  Box, Button, TextField, Typography, Paper, Alert, Container 
+  AppBar, Box, Button, TextField, Typography, Paper, Alert, Container, Toolbar
 } from '@mui/material';
-import { INIT_USERS} from '../utils/Constants';
-
 
 const Login = () => {
   const navigate = useNavigate();
@@ -19,8 +17,7 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Get registered users from INIT_USERS 
-    const users = INIT_USERS; // 
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
     
     // Find matching user
     const user = users.find(
@@ -36,7 +33,7 @@ const Login = () => {
     localStorage.setItem('currentUser', JSON.stringify(user));
 
     // role based login
-    if (user.role === 'Admin') {
+    if (user.role === 'admin') {
       navigate('/admindash');
     } else {
       navigate('/studentdash'); // Student dashboard
@@ -44,7 +41,15 @@ const Login = () => {
   };
 
   return (
-    <Container maxWidth="sm">
+    <>
+      <AppBar position="static" sx={{ bgcolor: '#0e1c2c' }}>
+        <Toolbar>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Playfair Display' }}>
+            CAMPUS COMPLAINT MANAGEMENT SYSTEM
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <Container maxWidth="sm">
       <Paper elevation={3} sx={{ p: 4, mt: 8 }}>
         <Typography variant="h4" align="center" gutterBottom>
           Login
@@ -70,6 +75,7 @@ const Login = () => {
         </Box>
       </Paper>
     </Container>
+    </>
   );
 };
 

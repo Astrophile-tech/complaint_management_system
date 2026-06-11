@@ -17,7 +17,7 @@ import { DRAWER_W } from '../utils/Constants';
 const STUDENT_NAV = [
   { id: 'dashboard',     label: 'Dashboard',      icon: <DashboardIcon />, path: '/studentdash' },
   { id: 'submit',        label: 'New Complaint',  icon: <AddCircleIcon />, path: '/submit' },
-  { id: 'my-complaints', label: 'My Complaints',  icon: <ListAltIcon />, path: '/' },
+  { id: 'my-complaints', label: 'My Complaints',  icon: <ListAltIcon />, path: '/mycomplaints' },
   { id: 'tracking',      label: 'Track Status',   icon: <TrackChangesIcon />, path: '/status' },
 ];
 const ADMIN_NAV = [
