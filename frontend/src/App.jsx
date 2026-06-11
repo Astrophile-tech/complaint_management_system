@@ -23,13 +23,18 @@ const App = () => {
   return (
     
         <Routes>
+          //Authentication
           <Route path="/login" element={<Login/>} />
           <Route path="/register" element={<Register/>} />
           <Route path="/" element={<Navigate to="/login" />} />
+          //Dashboards
           <Route element={<DashboardLayout />}>
           <Route path="/admindash" element={<AdminDashboard user={user} complaints={complaints} />} />
           <Route path="/studentdash" element={<StudentDashboard user={currentStudent} complaints={complaints} />} />
+
+          //Complaint Flow
           <Route path="/submit" element={<SubmitComplaint />} />
+      
           <Route path="/complaint-details/:id" element={<ComplaintDetails />} />
           <Route path="/mycomplaints" element={<MyComplaints/>} />
           <Route path="/details" element={<ComplaintDetails />} />
