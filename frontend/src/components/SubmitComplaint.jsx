@@ -25,7 +25,7 @@ function SubmitComplaint() {
       status: 'Pending' // Auto status
     };
     localStorage.setItem('complaints', JSON.stringify([...existing, newComplaint]));
-    navigate('/'); // Redirect to My Complaints page
+    navigate('/mycomplaints'); // Redirect to My Complaints page
 
   }
 

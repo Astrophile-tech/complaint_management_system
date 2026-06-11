@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { 
-  Box, Button, TextField, Typography, Paper, MenuItem, Alert, Container 
+  AppBar, Box, Button, TextField, Typography, Paper, MenuItem, Alert, Container, FormControl, InputLabel, Select, Toolbar
 } from '@mui/material';
-
-
-import { FormControl, InputLabel, Select,  } from '@mui/material';
 
 
 const Register = () => {
@@ -48,7 +45,15 @@ const Register = () => {
   };
 
   return (
-    <Container maxWidth="sm">
+    <>
+      <AppBar position="static" sx={{ bgcolor: '#0e1c2c' }}>
+        <Toolbar>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Playfair Display' }}>
+            CAMPUS COMPLAINT MANAGEMENT SYSTEM
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <Container maxWidth="sm">
       <Paper elevation={3} sx={{ p: 4, mt: 8 }}>
         <Typography variant="h4" align="center" gutterBottom>
           Register
@@ -118,6 +123,7 @@ const Register = () => {
         </Box>
       </Paper>
     </Container>
+    </>
   );
 };
 

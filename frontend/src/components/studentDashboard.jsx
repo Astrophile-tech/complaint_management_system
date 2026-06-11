@@ -108,7 +108,7 @@ const StudentDashboard = ({ user, complaints = [] }) => {
         <CardContent>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
             <Typography variant="subtitle2">Recent Complaints</Typography>
-            <Button size="small" onClick={() => navigate('/')} sx={{ textTransform: 'none' }}>
+            <Button size="small" onClick={() => navigate('/mycomplaints')} sx={{ textTransform: 'none' }}>
               View all →
             </Button>
           </Box>
