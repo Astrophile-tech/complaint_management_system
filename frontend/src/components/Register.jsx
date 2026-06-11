@@ -3,28 +3,30 @@ import { useNavigate, Link } from 'react-router-dom';
 import { 
   Box, Button, TextField, Typography, Paper, MenuItem, Alert, Container 
 } from '@mui/material';
-import { INIT_USERS} from '../utils/Constants';
+
+
+import { FormControl, InputLabel, Select,  } from '@mui/material';
+
+
 const Register = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
-    role: 'student'
+    role: ''
   });
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError('');
-  };
+     const [error, setError] = useState('');
+      const [success, setSuccess] = useState('');
+      const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setError('');
+        };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     
     const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const allUsers = [...users, ...INIT_USERS]; // Combine with initial users
     
     // Check if email already exists
     if (users.find(u => u.email === formData.email)) {
@@ -85,20 +87,19 @@ const Register = () => {
             margin="normal"
             required
           />
-          <TextField
-            fullWidth
-            select
-            label="Role"
-            name="role"
-            value={formData.role}
-            onChange={handleChange}
-            margin="normal"
-            required
-          >
-            <MenuItem value="Student">Student</MenuItem>
-            <MenuItem value="Admin">Admin</MenuItem>
-          </TextField>
-          
+<FormControl fullWidth margin="normal">
+  <InputLabel>Role</InputLabel>
+  <Select
+    name="role"
+    value={formData.role}
+    onChange={handleChange}
+    label="Role"
+  >
+    <MenuItem value="student">student</MenuItem>
+    <MenuItem value="admin">admin</MenuItem>
+  </Select>
+</FormControl>
+     
           <Button
             type="submit"
             fullWidth

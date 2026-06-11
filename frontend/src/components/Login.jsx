@@ -3,8 +3,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import { 
   Box, Button, TextField, Typography, Paper, Alert, Container 
 } from '@mui/material';
-import { INIT_USERS} from '../utils/Constants';
-
 
 const Login = () => {
   const navigate = useNavigate();
@@ -19,8 +17,7 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Get registered users from INIT_USERS 
-    const users = INIT_USERS; // 
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
     
     // Find matching user
     const user = users.find(
@@ -36,7 +33,7 @@ const Login = () => {
     localStorage.setItem('currentUser', JSON.stringify(user));
 
     // role based login
-    if (user.role === 'Admin') {
+    if (user.role === 'admin') {
       navigate('/admindash');
     } else {
       navigate('/studentdash'); // Student dashboard
