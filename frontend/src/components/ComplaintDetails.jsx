@@ -5,102 +5,73 @@ import {
   Typography,
   Chip,
   Divider,
+  Stack,
+  Button,
 } from "@mui/material";
+import { useLocation, useNavigate } from "react-router-dom";
+
 
 function ComplaintDetails() {
-  const complaint = {
-    id: 101,
-    title: "Network Issue",
-    category: "Technical",
-    description: "Internet connection is not working properly.",
-    dateSubmitted: "08-06-2026",
-    status: "Pending",
-  };
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const complaint = location.state;
+
+  if (!complaint) {
+    return (
+      <Box sx={{ p: 4 }}>
+        <Typography>No complaint selected.</Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box
       sx={{
         minHeight: "100vh",
-        backgroundColor: "#f5f7fa",
+        bgcolor: "#f4f6f8",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         p: 3,
       }}
     >
-      <Card
-        sx={{
-          width: "100%",
-          maxWidth: 700,
-          borderRadius: 3,
-          boxShadow: 4,
-        }}
-      >
+      <Card sx={{ width: "100%", maxWidth: 750, borderRadius: 3, boxShadow: 5 }}>
         <CardContent sx={{ p: 4 }}>
-          <Typography
-            variant="h4"
-            fontWeight="bold"
-            gutterBottom
-            color="primary"
-          >
+           <Typography variant="h4" fontWeight="bold" color="primary">
             Complaint Details
           </Typography>
 
-          <Divider sx={{ mb: 3 }} />
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            Full information about your complaint
+          </Typography>
 
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="subtitle2" color="text.secondary">
-              Complaint ID
-            </Typography>
-            <Typography variant="body1">{complaint.id}</Typography>
-          </Box>
+           <Divider sx={{ mb: 3 }} />
 
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="subtitle2" color="text.secondary">
-              Title
-            </Typography>
-            <Typography variant="body1">{complaint.title}</Typography>
-          </Box>
+         <Stack spacing={1}>
+            <Typography><b>ID:</b> {complaint.id}</Typography>
+            <Typography><b>Title:</b> {complaint.title}</Typography>
+            <Typography><b>Category:</b> {complaint.category}</Typography>
+            <Typography><b>Description:</b> {complaint.description}</Typography>
+            <Typography><b>Date:</b> {complaint.dateSubmitted}</Typography>
+          </Stack>
 
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="subtitle2" color="text.secondary">
-              Category
-            </Typography>
-            <Typography variant="body1">{complaint.category}</Typography>
-          </Box>
+          <Chip
+            label={complaint.status}
+            color="warning"
+            sx={{ mt: 3, fontWeight: 600 }}
+          />
 
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="subtitle2" color="text.secondary">
-              Description
-            </Typography>
-            <Typography variant="body1">
-              {complaint.description}
-            </Typography>
-          </Box>
-
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="subtitle2" color="text.secondary">
-              Date Submitted
-            </Typography>
-            <Typography variant="body1">
-              {complaint.dateSubmitted}
-            </Typography>
-          </Box>
-
-          <Box sx={{ mt: 3 }}>
-            <Typography variant="subtitle2" color="text.secondary" mb={1}>
-              Current Status
-            </Typography>
-
-            <Chip
-              label={complaint.status}
-              color="warning"
-              sx={{
-                fontWeight: "bold",
-                px: 1,
-              }}
-            />
-          </Box>
+            <Button
+            variant="contained"
+            fullWidth
+            sx={{ mt: 3, py: 1.2, fontWeight: 600 }}
+            onClick={() =>
+              navigate("/status", { state: complaint })
+            }
+          >
+            Track Complaint Status
+          </Button>
         </CardContent>
       </Card>
     </Box>
