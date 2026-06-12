@@ -13,6 +13,10 @@ import { INIT_USERS,INIT_COMPLAINTS } from './utils/Constants';
 import Login from './components/LOGIN';
 import DashboardLayout from './components/DashboardLayout';
 import Register from './components/Register';
+import AdminComplaintList from './components/AdminComplainList';
+import StatusUpdateScreen from './components/StatusUpdateScreen';
+import FilterInterface from './components/FilterInterface';
+
 
 const App = () => {
   const location = useLocation();
@@ -31,6 +35,10 @@ const App = () => {
           <Route element={<DashboardLayout />}>
           <Route path="/admindash" element={<AdminDashboard user={user} complaints={complaints} />} />
           <Route path="/studentdash" element={<StudentDashboard user={currentStudent} complaints={complaints} />} />
+          <Route path="/admin-complaints" element={<AdminComplaintList />} />
+          <Route path="/status-update" element={<StatusUpdateScreen />} />
+          <Route path="/filter-interface" element={<FilterInterface />} />
+          
 
           //Complaint Flow
           <Route path="/submit" element={<SubmitComplaint />} />
