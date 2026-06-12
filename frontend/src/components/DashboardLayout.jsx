@@ -27,7 +27,7 @@ const DashboardLayout = () => {
       <Box sx={{ display: 'flex', minHeight: 'calc(100vh - 64px)', bgcolor: '#F7FAFC' }}>
         <Sidebar role={user.role.toLowerCase()} />
         <Box component="main" sx={{ flex: 1, p: { xs: 2, md: 3 } }}>
-          <Outlet /> {/* Your dashboard pages render here */}
+          <Outlet /> {/*  dashboard pages render here */}
         </Box>
       </Box>
     </>

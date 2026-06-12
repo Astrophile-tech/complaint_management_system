@@ -13,7 +13,8 @@ import { INIT_USERS,INIT_COMPLAINTS } from './utils/Constants';
 import Login from './components/LOGIN';
 import DashboardLayout from './components/DashboardLayout';
 import Register from './components/Register';
-
+import AdminViewComplaints from './components/AdminViewComplaints';
+import AdminComplaintDetails from './components/AdminComplaintDetails';
 const App = () => {
   const location = useLocation();
   const role=location.pathname.startsWith('/admin') ? 'admin' : 'student';
@@ -35,7 +36,8 @@ const App = () => {
           <Route path="/details" element={<ComplaintDetails />} />
           <Route path="/status" element={<ComplaintStatus />} />
           <Route path="*" element={<Navigate to="/" replace />} />
-          
+          <Route path="/adminview" element={<AdminViewComplaints />} />
+          <Route path="/admin-complaint-details/:id" element={<AdminComplaintDetails />} />
           </Route>
           
         </Routes>

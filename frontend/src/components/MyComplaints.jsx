@@ -58,7 +58,7 @@ function MyComplaints() {
                   <TableCell>{complaint.id}</TableCell>
                   <TableCell>{complaint.title}</TableCell>
                   <TableCell>{complaint.category}</TableCell>
-                  <TableCell>{complaint.dateSubmitted}</TableCell>
+                  <TableCell>{complaint.date}</TableCell>
                   <TableCell>
                     <Chip label={complaint.status} color={getStatusColor(complaint.status)} size="small" />
                   </TableCell>
