@@ -1,19 +1,43 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { 
-  Box, Button, TextField, Typography, Paper, MenuItem, Alert, Container 
+import {
+  Box, Button, TextField, Typography, Paper,
+  Radio, RadioGroup, FormControlLabel, InputAdornment
 } from '@mui/material';
-import { INIT_USERS} from '../utils/Constants';
+import EmailIcon from '@mui/icons-material/Email';
+import LockIcon from '@mui/icons-material/Lock';
+import PersonIcon from '@mui/icons-material/Person';
+import SecurityIcon from '@mui/icons-material/Security';
+import { INIT_USERS } from '../utils/Constants';
+
+// Clean, professional outline states matching the premium theme
+const greenInput = {
+  mb: 1.5,
+  '& .MuiOutlinedInput-root': {
+    borderRadius: '8px',
+    backgroundColor: '#fff',
+    '& fieldset': { borderColor: '#0f766e' },
+    '&:hover fieldset': { borderColor: '#115e59' },
+    '&.Mui-focused fieldset': { borderColor: '#0f766e', borderWidth: '2px' },
+  }
+};
+
+const greenRadio = {
+  color: '#0f766e',
+  '&.Mui-checked': { color: '#0f766e' }
+};
+
 const Register = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
+    role: 'student',
     password: '',
-    role: 'student'
+    confirmPassword: ''
   });
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,101 +46,258 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const allUsers = [...users, ...INIT_USERS]; // Combine with initial users
-    
-    // Check if email already exists
-    if (users.find(u => u.email === formData.email)) {
-      setError('Email already registered');
+
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
+      setError('Please fill in all fields.');
+      return;
+    }
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match.');
+      return;
+    }
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters.');
       return;
     }
 
-    // Create new user with ID
+    const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
+    const allUsers = [...INIT_USERS, ...existingUsers];
+
+    if (allUsers.find(u => u.email === formData.email)) {
+      setError('Email already registered.');
+      return;
+    }
+
     const newUser = {
-      id: `U${users.length + 1}`,
-      ...formData
+      id: `u${Date.now()}`,
+      name: `${formData.firstName} ${formData.lastName}`,
+      email: formData.email,
+      password: formData.password,
+      role: formData.role
     };
 
-    // Save to localStorage
-    localStorage.setItem('users', JSON.stringify([...users, newUser]));
-    
-    setSuccess('Registration successful! Redirecting to login...');
-    setTimeout(() => navigate('/login'), 1500);
+    localStorage.setItem('users', JSON.stringify([...existingUsers, newUser]));
+    navigate('/login');
   };
 
   return (
-    <Container maxWidth="sm">
-      <Paper elevation={3} sx={{ p: 4, mt: 8 }}>
-        <Typography variant="h4" align="center" gutterBottom>
-          Register
-        </Typography>
+    <Box sx={{
+      minHeight: '100vh',
+      width: '100vw',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      bgcolor: '#f8fafc', // Ultra-clean, modern background tint
+      p: 2
+    }}>
+      <Paper 
+        elevation={4} 
+        sx={{ 
+          p: 4.5, 
+          width: '100%', 
+          maxWidth: 440, 
+          borderRadius: 4,
+          boxShadow: '0px 10px 30px rgba(0, 0, 0, 0.06)'
+        }}
+      >
+        {/* Centered Header branding block */}
+        <Box display="flex" flexDirection="column" alignItems="center" textAlign="center" mb={3}>
+          {/* Logo Icon on top, Text underneath */}
+        <Box
+  sx={{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    mb: 2
+  }}
+>
+  <SecurityIcon
+    sx={{
+      fontSize: 62,
+      color: '#0f766e',
+      mr: 1
+    }}
+  />
 
-        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-        {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
+  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+    <Typography
+      sx={{
+        color: '#0f766e',
+        fontWeight: 800,
+        fontSize: '1.35rem',
+        lineHeight: 1.05,
+        letterSpacing: '1px'
+      }}
+    >
+      COMPLAINT
+    </Typography>
+
+    <Typography
+      sx={{
+        color: '#0f766e',
+        fontWeight: 800,
+        fontSize: '1.35rem',
+        lineHeight: 1.05,
+        letterSpacing: '1px'
+      }}
+    >
+      CONNECT
+    </Typography>
+  </Box>
+</Box>
+          <Typography variant="h5" fontWeight={700} color="#1e293b">
+            Create An Account
+          </Typography>
+        </Box>
+
+        {error && (
+          <Typography color="error" variant="body2" textAlign="center" mb={2} fontWeight={500}>
+            {error}
+          </Typography>
+        )}
 
         <Box component="form" onSubmit={handleSubmit}>
+          {/* First & Last Name row split */}
+          <Box display="flex" gap={2}>
+            <TextField
+              fullWidth
+              placeholder="First Name"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
+              required
+              sx={greenInput}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <PersonIcon fontSize="small" sx={{ color: '#94a3b8' }} />
+                  </InputAdornment>
+                )
+              }}
+            />
+            <TextField
+              fullWidth
+              placeholder="Last Name"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+              required
+              sx={greenInput}
+            />
+          </Box>
+
+          {/* Email Address */}
           <TextField
             fullWidth
-            label="Name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            margin="normal"
-            required
-          />
-          <TextField
-            fullWidth
-            label="Email"
+            placeholder="Email Address"
             name="email"
             type="email"
             value={formData.email}
             onChange={handleChange}
-            margin="normal"
             required
+            sx={greenInput}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <EmailIcon fontSize="small" sx={{ color: '#94a3b8' }} />
+                </InputAdornment>
+              )
+            }}
           />
+
+          {/* Role selector block */}
+          <Box sx={{ mb: 1.5, px: 0.5 }}>
+            <Typography variant="body2" fontWeight={600} color="#475569" mb={0.5}>
+              Register As
+            </Typography>
+            <RadioGroup
+              row
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+            >
+              <FormControlLabel 
+                value="student" 
+                control={<Radio size="small" sx={greenRadio} />} 
+                label={<Typography variant="body2" color="#334155" fontWeight={500}>Citizen</Typography>} 
+              />
+              <FormControlLabel 
+                value="admin" 
+                control={<Radio size="small" sx={greenRadio} />} 
+                label={<Typography variant="body2" color="#334155" fontWeight={500}>Authority</Typography>} 
+              />
+            </RadioGroup>
+          </Box>
+
+          {/* Password Input */}
           <TextField
             fullWidth
-            label="Password"
+            placeholder="Password"
             name="password"
             type="password"
             value={formData.password}
             onChange={handleChange}
-            margin="normal"
             required
+            sx={greenInput}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <LockIcon fontSize="small" sx={{ color: '#94a3b8' }} />
+                </InputAdornment>
+              )
+            }}
           />
+
+          {/* Confirm Password Input */}
           <TextField
             fullWidth
-            select
-            label="Role"
-            name="role"
-            value={formData.role}
+            placeholder="Confirm Password"
+            name="confirmPassword"
+            type="password"
+            value={formData.confirmPassword}
             onChange={handleChange}
-            margin="normal"
             required
-          >
-            <MenuItem value="Student">Student</MenuItem>
-            <MenuItem value="Admin">Admin</MenuItem>
-          </TextField>
-          
+            sx={greenInput}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <LockIcon fontSize="small" sx={{ color: '#94a3b8' }} />
+                </InputAdornment>
+              )
+            }}
+          />
+
+          {/* Form Submit Action Button */}
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            elevation={0}
+            sx={{
+              mt: 1, mb: 2.5, py: 1.2,
+              borderRadius: '8px',
+              bgcolor: '#0f766e',
+              '&:hover': { bgcolor: '#115e59' },
+              fontWeight: 700,
+              fontSize: '0.95rem',
+              letterSpacing: '0.5px',
+              textTransform: 'uppercase'
+            }}
           >
             Register
           </Button>
 
-          <Typography align="center">
+          {/* Core Navigation Toggle Link */}
+          <Typography align="center" variant="body2" color="#64748b">
             Already have an account?{' '}
-            <Link to="/login" style={{ textDecoration: 'none' }}>
-              Login here
+            <Link to="/login" style={{ color: '#0f766e', fontWeight: 700, textDecoration: 'none' }}>
+              Log In
             </Link>
           </Typography>
         </Box>
       </Paper>
-    </Container>
+    </Box>
   );
 };
 
