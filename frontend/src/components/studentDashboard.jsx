@@ -9,7 +9,13 @@ import statusChip from '../utils/Helpers';
 
 const StudentDashboard = ({ user, complaints = [] }) => {
   const navigate = useNavigate();
-  const mine = useMemo(() => complaints.filter(c => c.createdBy === user.id), [complaints, user.id]);
+  
+   // Filter to only this student's complaints
+    const mine = useMemo(
+      () => complaints.filter(c => c.createdBy === user?.id),
+      [complaints, user?.id]
+    );
+
   const pending    = mine.filter(c => c.status === 'Pending').length;
   const inProgress = mine.filter(c => c.status === "In Progress").length;
   const resolved   = mine.filter(c => c.status === "Resolved").length;
@@ -39,7 +45,9 @@ const StudentDashboard = ({ user, complaints = [] }) => {
     <Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mb: 3 }}>
         <Typography variant="h5">My Dashboard</Typography>
-        <Typography variant="body2" color="text.secondary">Overview of your complaint activity</Typography>
+        <Typography variant="body2" color="text.secondary">
+          Welcome {user?.name ? `, ${user.name}` : ''}! Here's your complaint activity
+        </Typography>
       </Box>
      
      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mb: 3 }}>
@@ -133,7 +141,8 @@ const StudentDashboard = ({ user, complaints = [] }) => {
                 </TableHead>
                 <TableBody>
                   {recent.map(c => (
-                    <TableRow key={c.id} hover>
+                    <TableRow key={c.id} hover hover sx={{ cursor: 'pointer' }}
+                     onClick={() => navigate('/details', { state: c })}>
                       <TableCell sx={{ fontWeight: 500 }}>{c.title}</TableCell>
                       <TableCell>
                         <Chip label={`${CAT_ICONS[c.category]} ${c.category}`} size="small" variant="outlined" />
