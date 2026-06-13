@@ -22,9 +22,9 @@ const STUDENT_NAV = [
 ];
 const ADMIN_NAV = [
   { id: 'dashboard',      label: 'Dashboard',        icon: <DashboardIcon />, path: '/admindash' },
-  { id: 'all-complaints', label: 'All Complaints',   icon: <FolderOpenIcon />, path: '/' },
-  { id: 'manage',         label: 'Manage & Resolve', icon: <BuildIcon />, path: '/status' },
-  { id: 'statistics',     label: 'Statistics',       icon: <BarChartIcon />, path: '/admindash' },
+  { id: 'all-complaints', label: 'All Complaints',   icon: <FolderOpenIcon />, path: '/admin-complaints' },
+  { id: 'manage',         label: 'Manage & Resolve', icon: <BuildIcon />, path: '/status-update' },
+  { id: 'statistics',     label: 'Statistics',       icon: <BarChartIcon />, path: '/statistics' },
 ];
 
 function Sidebar({ role }) {

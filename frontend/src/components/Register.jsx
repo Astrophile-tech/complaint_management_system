@@ -26,19 +26,21 @@ const greenRadio = {
   '&.Mui-checked': { color: '#0f766e' }
 };
 
-const Register = () => {
+const Register = ({addUser}) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    fristName: '',
+    firstName: '',
     lastName:'',
     email: '',    
     role: '',
     password: '',
     confirmPassword: ''
   });
-     const [error, setError] = useState('');
-      const [success, setSuccess] = useState('');
-      const handleChange = (e) => {
+  
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  
+  const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
         setError('');
         };
@@ -46,37 +48,36 @@ const Register = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-
-     if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
-      setError('Please fill in all fields.');
-      return;
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
+      setError('Please fill in all fields.'); return;
     }
+    if (!formData.role) { setError('Please select a role.'); return; }
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match.');
-      return;
+      setError('Passwords do not match.'); return;
     }
     if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters.');
-      return;
+      setError('Password must be at least 6 characters.'); return;
     }
     
-    // Check if email already exists
+    // Read current users from localStorage to check duplicates & generate ID
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
     if (users.find(u => u.email === formData.email)) {
-      setError('Email already registered');
-      return;
+      setError('Email already registered.'); return;
     }
 
     // Create new user with ID
-    const newUser = {
-      id: `U${users.length + 1}`,
-      ...formData
+     const newUser = {
+      id: `u${Date.now()}`,
+      name: `${formData.firstName} ${formData.lastName}`,
+      email: formData.email,
+      password: formData.password,
+      role: formData.role,
     };
 
-    // Save to localStorage
-    localStorage.setItem('users', JSON.stringify([...users, newUser]));
-    
-    setSuccess('Registration successful! Redirecting to login...');
+    // Persist via shared App state handler (which also syncs localStorage)
+    addUser(newUser);
+
+    setSuccess('Registration successful! Redirecting to login…');
     setTimeout(() => navigate('/login'), 1500);
   };
 
@@ -224,7 +225,7 @@ const Register = () => {
               <FormControlLabel 
                 value="admin" 
                 control={<Radio size="small" sx={greenRadio} />} 
-                label={<Typography variant="body2" color="#334155" fontWeight={500}>Authority</Typography>} 
+                label={<Typography variant="body2" color="#334155" fontWeight={500}>Admin</Typography>} 
               />
             </RadioGroup>
           </Box>

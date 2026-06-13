@@ -44,7 +44,7 @@ const AdminDashboard = ({ complaints , users }) => {
 
   return (
     <Box>
-      <Box mb={3}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mb: 3 }}>
         <Typography variant="h5">Admin Dashboard</Typography>
         <Typography variant="body2" color="text.secondary">
           System-wide complaint overview •{" "}
@@ -53,17 +53,20 @@ const AdminDashboard = ({ complaints , users }) => {
       </Box>
 
       {/* Stat cards */}
-      <Grid container spacing={2} mb={3}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mb: 3 }}>
+      <Grid container spacing={10} mb={3}>
         {stats.map(s => (
-          <Grid item xs={6} md={3} key={s.label}>
+          <Grid item xs={12} sm={6} md={4} key={s.label}>
             <StatCard {...s} />
           </Grid>
         ))}
       </Grid>
+    </Box>
 
       {/* KPI row */}
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mb: 3 }}>
       <Grid container spacing={2} mb={3}>
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={4} md={5}>
           <Card>
             <CardContent>
               <Typography variant="caption" color="text.secondary" fontWeight={700}
@@ -103,11 +106,13 @@ const AdminDashboard = ({ complaints , users }) => {
           </Card>
         </Grid>
       </Grid>
+    </Box>
 
       {/* Charts */}
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mb: 3,  }}>
       <Grid container spacing={2} mb={3}>
         <Grid item xs={12} md={7}>
-          <Card sx={{ height: "100%" }}>
+          <Card sx={{ width: 355 }}>
             <CardContent>
               <Typography variant="subtitle2" gutterBottom>Complaints by Category</Typography>
               {barData.length === 0 ? (
@@ -129,7 +134,7 @@ const AdminDashboard = ({ complaints , users }) => {
           </Card>
         </Grid>
         <Grid item xs={12} md={5}>
-          <Card sx={{ height: "100%" }}>
+          <Card sx={{ width: 355 }}>
             <CardContent>
               <Typography variant="subtitle2" gutterBottom>Status Distribution</Typography>
               {total === 0 ? (
@@ -150,6 +155,7 @@ const AdminDashboard = ({ complaints , users }) => {
           </Card>
         </Grid>
       </Grid>
+     </Box>
 
       {/* Recent table */}
       <Card>

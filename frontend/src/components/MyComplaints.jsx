@@ -1,16 +1,15 @@
-import { useState, useEffect } from 'react'
+
 import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Chip, Button, Card, CardContent } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 
-function MyComplaints() {
+function MyComplaints({complaints, onDeleteComplaint}) {
   const navigate = useNavigate();
-  const [complaints, setComplaints] = useState([]);
 
-  //  Read from localStorage 
-  useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem('complaints') || '[]');
-    setComplaints(stored);
-  }, []);
+   // Show only this student's complaints
+  const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+  const mine = currentUser
+    ? complaints.filter(c => c.createdBy === currentUser.id)
+    : complaints;
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -23,13 +22,18 @@ function MyComplaints() {
     }
   }
 
+  const handleDelete = (e, id) => {
+    e.stopPropagation(); // Prevent row click firing
+    onDeleteComplaint(id);
+  };
+
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "#f4f6f8", p: 4}}>
       <Card sx={{ maxWidth: 1100, mx: "auto", borderRadius: 3, boxShadow: 5  }}>
         <CardContent>
         <Typography variant="h4" fontWeight="bold" color="primary" gutterBottom>My Complaints</Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-          Total complaints: {complaints.length}
+          Total complaints: {mine.length}
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
           Click on a complaint to view full details
@@ -52,7 +56,7 @@ function MyComplaints() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {complaints.length === 0 ? (
+            {mine.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} align="center">
                   No complaints submitted yet. 
@@ -63,7 +67,7 @@ function MyComplaints() {
               </TableRow>
             ) : 
             (
-              complaints.map((c) => (             //loop through each complaint and display in table
+              mine.map((c) => (             //loop through each complaint and display in table
                 <TableRow key={c.id} hover onClick={()=> navigate("/details", {state: c})
                 }
                 sx={{
@@ -81,7 +85,7 @@ function MyComplaints() {
                   </TableCell>
                   <TableCell>
                     
-                    <Button  size="small"  variant="outlined"onClick={() => navigate(`/submit/${c.id}`)}>
+                    <Button  size="small"  variant="outlined" color="error" onClick={e => handleDelete(e, c.id)}>
                       Delete
                     </Button>
                     
