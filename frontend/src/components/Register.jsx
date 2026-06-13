@@ -1,17 +1,40 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { 
-  AppBar, Box, Button, TextField, Typography, Paper, MenuItem, Alert, Container, FormControl, InputLabel, Select, Toolbar
+import {
+  Box, Button, TextField, Typography, Paper,
+  Radio, RadioGroup, FormControlLabel, InputAdornment, Alert
 } from '@mui/material';
 
+import EmailIcon from '@mui/icons-material/Email';
+import LockIcon from '@mui/icons-material/Lock';
+import PersonIcon from '@mui/icons-material/Person';
+import SecurityIcon from '@mui/icons-material/Security';
+
+const greenInput = {
+  mb: 1.5,
+  '& .MuiOutlinedInput-root': {
+    borderRadius: '8px',
+    backgroundColor: '#fff',
+    '& fieldset': { borderColor: '#0f766e' },
+    '&:hover fieldset': { borderColor: '#115e59' },
+    '&.Mui-focused fieldset': { borderColor: '#0f766e', borderWidth: '2px' },
+  }
+};
+
+const greenRadio = {
+  color: '#0f766e',
+  '&.Mui-checked': { color: '#0f766e' }
+};
 
 const Register = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
+    fristName: '',
+    lastName:'',
+    email: '',    
+    role: '',
     password: '',
-    role: ''
+    confirmPassword: ''
   });
      const [error, setError] = useState('');
       const [success, setSuccess] = useState('');
@@ -24,6 +47,19 @@ const Register = () => {
     e.preventDefault();
     
     const users = JSON.parse(localStorage.getItem('users') || '[]');
+
+     if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
+      setError('Please fill in all fields.');
+      return;
+    }
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match.');
+      return;
+    }
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters.');
+      return;
+    }
     
     // Check if email already exists
     if (users.find(u => u.email === formData.email)) {
@@ -46,83 +82,222 @@ const Register = () => {
 
   return (
     <>
-      <AppBar position="static" sx={{ bgcolor: '#0e1c2c' }}>
-        <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Playfair Display' }}>
-            CAMPUS COMPLAINT MANAGEMENT SYSTEM
+      <Box sx={{
+      minHeight: '100vh',
+      width: '100vw',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      bgcolor: '#f8fafc', // Ultra-clean, modern background tint
+      p: 2
+    }}>
+      <Paper 
+        elevation={4} 
+        sx={{ 
+          p: 4.5, 
+          width: '100%', 
+          maxWidth: 440, 
+          borderRadius: 4,
+          boxShadow: '0px 10px 30px rgba(0, 0, 0, 0.06)'
+        }}
+      >
+        {/* Centered Header branding block */}
+        <Box display="flex" flexDirection="column" alignItems="center" textAlign="center" mb={3}>
+          {/* Logo Icon on top, Text underneath */}
+        <Box
+  sx={{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    mb: 2
+  }}
+>
+  <SecurityIcon
+    sx={{
+      fontSize: 62,
+      color: '#0f766e',
+      mr: 1
+    }}
+  />
+
+  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+    <Typography
+      sx={{
+        color: '#0f766e',
+        fontWeight: 800,
+        fontSize: '1.35rem',
+        lineHeight: 1.05,
+        letterSpacing: '1px'
+      }}
+    >
+      COMPLAINT
+    </Typography>
+
+    <Typography
+      sx={{
+        color: '#0f766e',
+        fontWeight: 800,
+        fontSize: '1.35rem',
+        lineHeight: 1.05,
+        letterSpacing: '1px'
+      }}
+    >
+      CONNECT
+    </Typography>
+  </Box>
+</Box>
+       <Typography variant="h5" fontWeight={700} color="#1e293b">
+            Create An Account
           </Typography>
-        </Toolbar>
-      </AppBar>
-      <Container maxWidth="sm">
-      <Paper elevation={3} sx={{ p: 4, mt: 8 }}>
-        <Typography variant="h4" align="center" gutterBottom>
-          Register
-        </Typography>
+        </Box>
+          
 
         {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
         {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
 
         <Box component="form" onSubmit={handleSubmit}>
+           {/* First & Last Name row split */}
+          <Box display="flex" gap={2}>
+            <TextField
+              fullWidth
+              placeholder="First Name"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
+              required
+              sx={greenInput}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <PersonIcon fontSize="small" sx={{ color: '#94a3b8' }} />
+                  </InputAdornment>
+                )
+              }}
+            />
+            <TextField
+              fullWidth
+              placeholder="Last Name"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+              required
+              sx={greenInput}
+            />
+          </Box>
+
+          {/* Email Address */}
           <TextField
             fullWidth
-            label="Name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            margin="normal"
-            required
-          />
-          <TextField
-            fullWidth
-            label="Email"
+            placeholder="Email Address"
             name="email"
             type="email"
             value={formData.email}
-            onChange={handleChange}
-            margin="normal"
+            onChange={handleChange}           
             required
+            sx={greenInput}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <EmailIcon fontSize="small" sx={{ color: '#94a3b8' }} />
+                </InputAdornment>
+              )
+            }}
           />
+
+        {/* Role selector block */}
+          <Box sx={{ mb: 1.5, px: 0.5 }}>
+            <Typography variant="body2" fontWeight={600} color="#475569" mb={0.5}>
+              Register As
+            </Typography>
+            <RadioGroup
+              row
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+            >
+              <FormControlLabel 
+                value="student" 
+                control={<Radio size="small" sx={greenRadio} />} 
+                label={<Typography variant="body2" color="#334155" fontWeight={500}>Student</Typography>} 
+              />
+              <FormControlLabel 
+                value="admin" 
+                control={<Radio size="small" sx={greenRadio} />} 
+                label={<Typography variant="body2" color="#334155" fontWeight={500}>Authority</Typography>} 
+              />
+            </RadioGroup>
+          </Box>
+
+          {/* Password Input */}
           <TextField
             fullWidth
-            label="Password"
+            placeholder="Password"
             name="password"
             type="password"
             value={formData.password}
             onChange={handleChange}
-            margin="normal"
             required
+            sx={greenInput}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <LockIcon fontSize="small" sx={{ color: '#94a3b8' }} />
+                </InputAdornment>
+              )
+            }}
           />
-<FormControl fullWidth margin="normal">
-  <InputLabel>Role</InputLabel>
-  <Select
-    name="role"
-    value={formData.role}
-    onChange={handleChange}
-    label="Role"
-  >
-    <MenuItem value="student">student</MenuItem>
-    <MenuItem value="admin">admin</MenuItem>
-  </Select>
-</FormControl>
+
+          {/* Confirm Password Input */}
+       <TextField
+            fullWidth 
+            placeholder="Confirm Password"
+            name="confirmPassword"
+            type="password"
+            value={formData.confirmPassword}  
+            onChange={handleChange}
+            required
+          sx={greenInput}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <LockIcon fontSize="small" sx={{ color: '#94a3b8' }} />
+                </InputAdornment>
+              )
+            }}
+          />
+
+          {/* Form Submit Action Button */}
      
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+           elevation={0}
+            sx={{
+              mt: 1, mb: 2.5, py: 1.2,
+              borderRadius: '8px',
+              bgcolor: '#0f766e',
+              '&:hover': { bgcolor: '#115e59' },
+              fontWeight: 700,
+              fontSize: '0.95rem',
+              letterSpacing: '0.5px',
+              textTransform: 'uppercase'
+            }}
           >
             Register
           </Button>
 
-          <Typography align="center">
+         {/* Core Navigation Toggle Link */}
+          <Typography align="center" variant="body2" color="#64748b">
             Already have an account?{' '}
-            <Link to="/login" style={{ textDecoration: 'none' }}>
-              Login here
+           <Link to="/login" style={{ color: '#0f766e', fontWeight: 700, textDecoration: 'none' }}>
+              Log In
             </Link>
           </Typography>
         </Box>
       </Paper>
-    </Container>
+    </Box>
     </>
   );
 };

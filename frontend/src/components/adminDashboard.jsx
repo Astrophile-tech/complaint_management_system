@@ -10,7 +10,7 @@ import statusChip from '../utils/Helpers';
 
 
 
-const AdminDashboard = ({ complaints, users }) => {
+const AdminDashboard = ({ complaints , users }) => {
   const total      = complaints.length;
   const pending    = complaints.filter(c => c.status === "Pending").length;
   const inProgress = complaints.filter(c => c.status === "In Progress").length;
