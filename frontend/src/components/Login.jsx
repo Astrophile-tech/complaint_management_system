@@ -2,45 +2,61 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { 
   Box, Button, TextField, Typography, Paper, Checkbox,
-  FormControlLabel, InputAdornment
+  FormControlLabel, InputAdornment,
+  ToggleButtonGroup,
+  ToggleButton
 } from '@mui/material';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 import SecurityIcon from '@mui/icons-material/Security';
+import api from '../utils/api';
 
 const Login = () => {
   const navigate = useNavigate();
+  const [loginType, setLoginType] = useState('student'); // 'student' | 'admin'
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
+   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError('');
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    
-    // Find matching user
-    const user = users.find(
-      u => u.email === formData.email && u.password === formData.password
-    );
-
-    if (!user) {
-      setError('Invalid email or password. Only registered users can login.');
-      return;
+  const handleLoginTypeChange = (e, value) => {
+    if (value) {
+      setLoginType(value);
+      setFormData({ email: '', password: '' });
+      setError('');
     }
+  };
 
-    // Save current user session
-    localStorage.setItem('currentUser', JSON.stringify(user));
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
 
-    // role based login
-    if (user.role === 'admin') {
-      navigate('/admindash');
-    } else {
-      navigate('/studentdash'); // Student dashboard
+     try {
+      let data;
+      if (loginType === 'admin') {
+        data = await api.post('/auth/admin-login', { password: formData.password });
+      } else {
+        data = await api.post('/auth/login', { email: formData.email, password: formData.password });
+      }
+
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('currentUser', JSON.stringify(data.user));
+    
+    
+    if (data.user.role === 'admin') {
+        navigate('/admindash');
+      } else {
+        navigate('/studentdash');
+      }
+    } catch (err) {
+      setError(err.message || 'Invalid credentials.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -120,9 +136,18 @@ const Login = () => {
     Sign in to manage your submissions
   </Typography>
 </Box>
-          <Typography variant="body2" color="text.secondary" textAlign="center" mb={3}>
-            Sign in to manage your submissions
-          </Typography>
+           {/* Login type toggle */}
+            <Box display="flex" justifyContent="center" mb={2}>
+              <ToggleButtonGroup
+                value={loginType}
+                exclusive
+                onChange={handleLoginTypeChange}
+                size="small"
+              >
+                <ToggleButton value="student" sx={{ px: 3 }}>Student</ToggleButton>
+                <ToggleButton value="admin" sx={{ px: 3 }}>Admin</ToggleButton>
+              </ToggleButtonGroup>
+            </Box>
 
           {error && (
             <Typography color="error" variant="body2" textAlign="center" mb={2}>
@@ -131,6 +156,7 @@ const Login = () => {
           )}
 
           <Box component="form" onSubmit={handleSubmit}>
+            {loginType === 'student' && (
             <TextField
               fullWidth
               placeholder="Email Address"
@@ -148,9 +174,10 @@ const Login = () => {
                 )
               }}
             />
+            )}
             <TextField
               fullWidth
-              placeholder="Password"
+              placeholder={loginType === 'admin' ? 'Admin Password' : 'Password'}
               name="password"
               type="password"
               value={formData.password}
@@ -165,16 +192,16 @@ const Login = () => {
                 )
               }}
             />
-
-            <Box
-  sx={{
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
-    mt: 1
-  }}
->
+{loginType === 'student' && (
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          width: '100%',
+          mt: 1
+        }}
+      >
   <FormControlLabel
     sx={{ m: 0 }}
     control={<Checkbox size="small" />}
@@ -193,10 +220,12 @@ const Login = () => {
   </Link>
 
 </Box>
+)}
             <Button
               type="submit"
               fullWidth
               variant="contained"
+              disabled={loading}
               sx={{
                 mt: 2, mb: 2, py: 1.2,
                 bgcolor: '#0f5f56',
@@ -205,9 +234,11 @@ const Login = () => {
                 letterSpacing: 1
               }}
             >
-              LOG IN
+              {loading ? 'LOGGING IN...' : 'LOG IN'}
             </Button>
           </Box>
+
+        {loginType === 'student' && (
         <Typography align="center" variant="body2">
         Don't have an account?{' '}
 
@@ -215,6 +246,7 @@ const Login = () => {
               Register Now
         </Link>
           </Typography>
+        )}
         </Paper>
       </Box>
     </Box>
