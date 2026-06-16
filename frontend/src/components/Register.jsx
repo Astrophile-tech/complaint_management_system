@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
   Box, Button, TextField, Typography, Paper,
-  Radio, RadioGroup, FormControlLabel, InputAdornment, Alert
+   InputAdornment, Alert
 } from '@mui/material';
 
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 import PersonIcon from '@mui/icons-material/Person';
 import SecurityIcon from '@mui/icons-material/Security';
+import api from '../utils/api';
 
 const greenInput = {
   mb: 1.5,
@@ -21,65 +22,58 @@ const greenInput = {
   }
 };
 
-const greenRadio = {
-  color: '#0f766e',
-  '&.Mui-checked': { color: '#0f766e' }
-};
 
-const Register = ({addUser}) => {
+const Register = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName:'',
     email: '',    
-    role: '',
     password: '',
     confirmPassword: ''
   });
   
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [loading, setLoading] = useState(false);
   
   const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
         setError('');
         };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
       setError('Please fill in all fields.'); return;
     }
-    if (!formData.role) { setError('Please select a role.'); return; }
+    
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match.'); return;
     }
     if (formData.password.length < 6) {
       setError('Password must be at least 6 characters.'); return;
     }
-    
-    // Read current users from localStorage to check duplicates & generate ID
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    if (users.find(u => u.email === formData.email)) {
-      setError('Email already registered.'); return;
+
+    setLoading(true);
+    try {
+      await api.post('/auth/register', {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        password: formData.password,
+      });
+
+      setSuccess('Registration successful! Redirecting to login…');
+      setTimeout(() => navigate('/login'), 1500);
+    } catch (err) {
+      setError(err.message || 'Registration failed.');
+    } finally {
+      setLoading(false);
     }
-
-    // Create new user with ID
-     const newUser = {
-      id: `u${Date.now()}`,
-      name: `${formData.firstName} ${formData.lastName}`,
-      email: formData.email,
-      password: formData.password,
-      role: formData.role,
-    };
-
-    // Persist via shared App state handler (which also syncs localStorage)
-    addUser(newUser);
-
-    setSuccess('Registration successful! Redirecting to login…');
-    setTimeout(() => navigate('/login'), 1500);
   };
+    
 
   return (
     <>
@@ -206,29 +200,7 @@ const Register = ({addUser}) => {
             }}
           />
 
-        {/* Role selector block */}
-          <Box sx={{ mb: 1.5, px: 0.5 }}>
-            <Typography variant="body2" fontWeight={600} color="#475569" mb={0.5}>
-              Register As
-            </Typography>
-            <RadioGroup
-              row
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-            >
-              <FormControlLabel 
-                value="student" 
-                control={<Radio size="small" sx={greenRadio} />} 
-                label={<Typography variant="body2" color="#334155" fontWeight={500}>Student</Typography>} 
-              />
-              <FormControlLabel 
-                value="admin" 
-                control={<Radio size="small" sx={greenRadio} />} 
-                label={<Typography variant="body2" color="#334155" fontWeight={500}>Admin</Typography>} 
-              />
-            </RadioGroup>
-          </Box>
+   
 
           {/* Password Input */}
           <TextField
@@ -274,7 +246,7 @@ const Register = ({addUser}) => {
             type="submit"
             fullWidth
             variant="contained"
-           elevation={0}
+            disabled={loading}
             sx={{
               mt: 1, mb: 2.5, py: 1.2,
               borderRadius: '8px',
@@ -286,7 +258,7 @@ const Register = ({addUser}) => {
               textTransform: 'uppercase'
             }}
           >
-            Register
+            {loading ? 'REGISTERING...' : 'Register'}
           </Button>
 
          {/* Core Navigation Toggle Link */}
