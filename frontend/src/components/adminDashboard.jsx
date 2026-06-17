@@ -10,12 +10,13 @@ import statusChip from '../utils/Helpers';
 
 
 
-const AdminDashboard = ({ complaints , users }) => {
+const AdminDashboard = ({ complaints = [] , users = [] }) => {
   const total      = complaints.length;
   const pending    = complaints.filter(c => c.status === "Pending").length;
   const inProgress = complaints.filter(c => c.status === "In Progress").length;
   const resolved   = complaints.filter(c => c.status === "Resolved").length;
   const resRate    = total > 0 ? Math.round((resolved / total) * 100) : 0;
+  //count only students
   const students   = users.filter(u => u.role === "student").length;
 
   const pieData = [
@@ -31,6 +32,7 @@ const AdminDashboard = ({ complaints , users }) => {
     .sort((a, b) => b[1] - a[1])
     .map(([name, value]) => ({ name: name.length > 10 ? name.slice(0, 9) + "…" : name, value }));
 
+    //Recent 5 complaints
   const recent = [...complaints]
     .sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate))
     .slice(0, 5);
@@ -46,7 +48,7 @@ const AdminDashboard = ({ complaints , users }) => {
     <Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mb: 3 }}>
         <Typography variant="h5">Admin Dashboard</Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.secondary" mt={0.5}>
           System-wide complaint overview •{" "}
           {new Date().toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
         </Typography>
@@ -174,7 +176,7 @@ const AdminDashboard = ({ complaints , users }) => {
               </TableHead>
               <TableBody>
                 {recent.map(c => {
-                  const who = users.find(u => u.id === c.createdBy);
+                  const who = users.find(u => String(u.id) === String(c.createdBy));
                   return (
                     <TableRow key={c.id} hover>
                       <TableCell sx={{ fontWeight: 500 }}>{c.title}</TableCell>

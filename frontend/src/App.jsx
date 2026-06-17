@@ -7,7 +7,6 @@ import ComplaintStatus from './components/ComplaintStatus';
 import AdminDashboard from './components/adminDashboard';
 import StudentDashboard from './components/studentDashboard';
 import SubmitComplaint from './components/SubmitComplaint';
-import { INIT_USERS,INIT_COMPLAINTS } from './utils/Constants';
 import Login from './components/LOGIN';
 import DashboardLayout from './components/DashboardLayout';
 import Register from './components/Register';
@@ -16,87 +15,168 @@ import StatusUpdateScreen from './components/StatusUpdateScreen';
 import FilterInterface from './components/FilterInterface';
 import Statistics from './components/Statistics';
 import { useEffect, useState } from 'react';
+import api from './utils/api';
+import { useCallback } from 'react';
+import ProfilePage from './components/ProfilePage';
 
+// ─── Route Guards ─────────────────────────────────────────────────────────────
+const PrivateRoute = ({ children }) => {
+  const token = localStorage.getItem('token');
+  return token ? children : <Navigate to="/login" replace />;
+};
 
+const RoleRoute = ({ role, children }) => {
+  const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+  if (!user) return <Navigate to="/login" replace />;
+  if (user.role !== role) {
+    return <Navigate to={user.role === 'admin' ? '/admindash' : '/studentdash'} replace />;
+  }
+  return children;
+};
 
-const App = () => {
-  // ── Seed localStorage on very first load, then use it as single source of truth ──
-  
-    const [complaints, setComplaints] = useState(() => {
-      const stored = localStorage.getItem('complaints');
-      if (stored) return JSON.parse(stored);
-      // First visit: seed with initial data
-      localStorage.setItem('complaints', JSON.stringify(INIT_COMPLAINTS));
-      return INIT_COMPLAINTS;
-    });
-
-     const [users, setUsers] = useState(() => {
-        const stored = localStorage.getItem('users');
-        if (stored) return JSON.parse(stored);
-        // First visit: seed with initial users
-        localStorage.setItem('users', JSON.stringify(INIT_USERS));
-        return INIT_USERS;
-      });
-
-      // Keep localStorage in sync whenever state changes
-        useEffect(() => {
-          localStorage.setItem('complaints', JSON.stringify(complaints));
-        }, [complaints]);
-      
-        useEffect(() => {
-          localStorage.setItem('users', JSON.stringify(users));
-        }, [users]);
-
-        // Helpers passed down so any child can update shared state
-  const updateComplaint = (updatedComplaint) => {
-    setComplaints(prev =>
-      prev.map(c => c.id === updatedComplaint.id ? updatedComplaint : c)
-    );
-  };
-
-  const addComplaint = (newComplaint) => {
-    setComplaints(prev => [...prev, newComplaint]);
-  };
-
-  const deleteComplaint = (id) => {
-    setComplaints(prev => prev.filter(c => c.id !== id));
-  };
-
-  const addUser = (newUser) => {
-    setUsers(prev => [...prev, newUser]);
-  };
-
-  // Current logged-in user (read from session)
+function App () {
+  const [complaints, setComplaints] = useState([]);
+  const [users, setUsers]           = useState([]);
+  const [loadingData, setLoadingData] = useState(false);
+ 
   const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
-  const currentStudent = currentUser?.role === 'student'
-    ? users.find(u => u.id === currentUser.id) ?? users.find(u => u.role === 'student')
-    : users.find(u => u.role === 'student');
+  const isLoggedIn  = !!localStorage.getItem('token');
+ 
+  // ── Fetch all data the dashboards need ──────────────────────────────────────
+  const fetchData = useCallback(async () => {
+    if (!isLoggedIn) return;
+    setLoadingData(true);
+    try {
+      const [complaintsData, usersData] = await Promise.all([
+        api.get('/complaints'),
+        api.get('/users'),
+      ]);
+      setComplaints(complaintsData);
+      setUsers(usersData);
+    } catch (err) {
+      console.error('Failed to load data:', err.message);
+    } finally {
+      setLoadingData(false);
+    }
+  }, [isLoggedIn]);
+ 
+  useEffect(() => {
+  const loadData = () => {
+    fetchData();
+  };
+
+  loadData();
+}, [fetchData]);
+ 
+  // ── Complaint CRUD handlers ──────────────────────────────────────────────────
+  const addComplaint = async (complaintData) => {
+    try {
+      const created = await api.post('/complaints', complaintData);
+      setComplaints(prev => [created, ...prev]);
+      return created;
+    } catch (err) {
+      throw new Error(
+        err.message || "Failed to submit complaint.",
+        { cause: err }
+      );
+    }
+  };
+ 
+  const updateComplaint = async (updated) => {
+    try {
+      const saved = await api.put(`/complaints/${updated.id}`, {
+        status: updated.status,
+        resolution: updated.resolution,
+      });
+      setComplaints(prev => prev.map(c => (c.id === saved.id ? saved : c)));
+      return saved;
+    } catch (err) {
+      throw new Error
+        (err.message || 'Failed to update complaint.',
+          {cause: err}
+        );
+    }
+  };
+ 
+  const deleteComplaint = async (id) => {
+    try {
+      await api.del(`/complaints/${id}`);
+      setComplaints(prev => prev.filter(c => c.id !== id));
+    } catch (err) {
+      throw new Error(err.message || 'Failed to delete complaint.', {cause: err});
+    }
+  };
   return (
     
         <Routes>
           {/* Authentication */}
-          <Route path="/login" element={<Login addUser={addUser}/>} />
-          <Route path="/register" element={<Register addUser={addUser}/>} />
-          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/login" element={<Login onLoginSuccess={fetchData}/>} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
 
           {/* Protected Dashboard Routes */}
-          <Route element={<DashboardLayout />}>
-            <Route path="/admindash" element={<AdminDashboard users={users} complaints={complaints} onUpdateComplaint={updateComplaint}/>} />
-            <Route path="/studentdash" element={<StudentDashboard user={currentStudent} complaints={complaints} />} />
-            <Route path="/admin-complaints" element={<AdminComplaintList complaints={complaints} users={users} onUpdateComplaint={updateComplaint} onDeleteComplaint={deleteComplaint}/>} />
-            <Route path="/status-update" element={<StatusUpdateScreen complaints={complaints} onUpdateComplaint={updateComplaint}/>} />
-            <Route path="/filter-interface" element={<FilterInterface complaints={complaints}/>} />
-            <Route path='/statistics' element={<Statistics complaints={complaints} />} />
-          
+          <Route element={<PrivateRoute><DashboardLayout /></PrivateRoute>}>
 
-          {/* Complaint Flow */}
-          <Route path="/submit" element={<SubmitComplaint addComplaint={addComplaint} complaints={complaints}/>} />
-      
-          <Route path="/complaint-details/:id" element={<ComplaintDetails />} />
-          <Route path="/mycomplaints" element={<MyComplaints complaints={complaints} onDeleteComplaint={deleteComplaint}/>} />
+            {/* Student routes */}
+            <Route path="/studentdash" element={
+                <RoleRoute role="student">
+                  <StudentDashboard user={currentUser} complaints={complaints} />
+                </RoleRoute>
+            } />
+            
+            <Route path="/submit" element={
+                <RoleRoute role="student">
+                  <SubmitComplaint addComplaint={addComplaint} complaints={complaints} />
+                </RoleRoute>
+            } />
+
+            <Route path="/mycomplaints" element={
+                <RoleRoute role="student">
+                  <MyComplaints complaints={complaints} onDeleteComplaint={deleteComplaint} />
+                </RoleRoute>
+            } />\
+
+            {/* Admin routes */}
+             <Route path="/admindash" element={
+                <RoleRoute role="admin">
+                  <AdminDashboard complaints={complaints} users={users} />
+                </RoleRoute>
+            } />
+
+            <Route path="/admin-complaints" element={
+                <RoleRoute role="admin">
+                  <AdminComplaintList
+                    complaints={complaints}
+                    users={users}
+                    onUpdateComplaint={updateComplaint}
+                    onDeleteComplaint={deleteComplaint}
+                  />
+                </RoleRoute>
+            } />
+
+            <Route path="/status-update" element={
+                <RoleRoute role="admin">
+                  <StatusUpdateScreen complaints={complaints} onUpdateComplaint={updateComplaint} />
+                </RoleRoute>
+            } />
+
+            <Route path="/statistics" element={
+                <RoleRoute role="admin">
+                  <Statistics complaints={complaints} />
+                </RoleRoute>
+            } />
+
+             <Route path="/filter" element={
+                <RoleRoute role="admin">
+                  <FilterInterface complaints={complaints} />
+                </RoleRoute>
+            } />
+
+             {/* Shared routes */}
           <Route path="/details" element={<ComplaintDetails />} />
-          <Route path="/status" element={<ComplaintStatus complaints={complaints}/>} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="/status"  element={<ComplaintStatus  />} />
+          <Route path="/profile" element={<ProfilePage onProfileUpdate={fetchData} />} />
+        
           
           </Route>
           
