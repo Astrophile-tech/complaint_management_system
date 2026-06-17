@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Box, Typography, TextField, MenuItem, Button, Card, CardContent, Alert } from '@mui/material'
+import { Box, Typography, TextField, MenuItem, Button, Card, CardContent, Alert, CircularProgress } from '@mui/material'
 import { CATEGORIES } from '../utils/Constants'
 import { useNavigate } from 'react-router-dom'
 
@@ -8,12 +8,13 @@ function SubmitComplaint({addComplaint, complaints}) {
   
   const [values, setValues] = useState({ title: '', category: '', location: '', description: '' })
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = field => event => {
     setValues(prev => ({...prev, [field]: event.target.value }))
   }
 
-  const handleSubmit = event => {
+  const handleSubmit = async event => {
     event.preventDefault()
 
      if (!values.title || !values.category || !values.location || !values.description) {
@@ -21,27 +22,15 @@ function SubmitComplaint({addComplaint, complaints}) {
       return;
     }
 
-    // Get current logged-in user so complaint is linked to them
-    const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
-
-    // Generate unique ID based on current list length
-    const nextNumber = (complaints?.length ?? 0) + 1;
-    const complaintId = `C${String(nextNumber).padStart(3, '0')}`;
-
-    const newComplaint = {
-      id: complaintId,
-      ...values,
-      createdBy: currentUser?.id ?? 'unknown',
-      createdDate: new Date().toISOString().split('T')[0],   // YYYY-MM-DD for sorting
-      dateSubmitted: new Date().toLocaleDateString('en-GB'),  // DD/MM/YYYY for display
-      status: 'Pending',
-      resolution: '',
-    };
-
-     // Update shared state in App (which also syncs localStorage)
-    addComplaint(newComplaint);
-
-    navigate('/mycomplaints');
+     setLoading(true);
+    try {
+      await addComplaint(values);       // handled in App.jsx → api.post('/complaints', ...)
+      navigate('/mycomplaints');
+    } catch (err) {
+      setError(err.message || 'Failed to submit complaint.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -103,7 +92,10 @@ function SubmitComplaint({addComplaint, complaints}) {
               required
             />
             
-            <Button type="submit" variant="contained">Submit</Button>
+            <Button type="submit" variant="contained" disabled={loading} startIcon={loading && <CircularProgress size={16} color="inherit" />}
+             sx={{ bgcolor: '#0f5f56', '&:hover': { bgcolor: '#0c4a43' } }}>
+               {loading ? 'Submitting…' : 'Submit Complaint'}
+            </Button>
           </Box>
         </CardContent>
       </Card>

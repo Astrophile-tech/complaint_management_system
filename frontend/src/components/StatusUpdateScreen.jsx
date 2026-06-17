@@ -4,6 +4,7 @@ import {
   Button, Card, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow, TextField, Dialog,
   DialogTitle, DialogContent, DialogActions, Alert,
+  CircularProgress,
 } from '@mui/material';
 import { STATUS_LIST } from '../utils/Constants';
 import statusChip from '../utils/Helpers';
@@ -12,22 +13,33 @@ const StatusUpdateScreen = ({ complaints, onUpdateComplaint }) => {
   const [selected, setSelected] = useState(null);
   const [newStatus, setNewStatus] = useState('');
   const [resolution, setResolution] = useState('');
+  const [saving,     setSaving]     = useState(false);
   const [saved, setSaved] = useState(false);
+   const [saveError,  setSaveError]  = useState('');
 
   const openDialog = (c) => {
     setSelected(c);
     setNewStatus(c.status);
     setResolution(c.resolution || '');
     setSaved(false);
+    setSaveError('');
   };
 
-  const closeDialog = () => setSelected(null);
+  const closeDialog = () => { setSelected(null); setSaveError(''); };
 
-  const handleSave = () => {
-    if (!selected) return;
-    onUpdateComplaint({ ...selected, status: newStatus, resolution });
-    setSaved(true);
-    setTimeout(closeDialog, 800);
+  const handleSave = async () => {
+   if (!selected) return;
+    setSaving(true);
+    setSaveError('');
+    try {
+      await onUpdateComplaint({ ...selected, status: newStatus, resolution });
+      setSaved(true);
+      setTimeout(closeDialog, 800);
+    } catch (err) {
+      setSaveError(err.message || 'Failed to update. Try again.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   // Show only pending/in-progress — things that need action
@@ -60,13 +72,13 @@ const StatusUpdateScreen = ({ complaints, onUpdateComplaint }) => {
             ) : (
               actionable.map(c => (
                 <TableRow key={c.id} hover>
-                  <TableCell>{c.id}</TableCell>
+                   <TableCell sx={{ fontFamily: 'monospace', fontSize: '0.75rem' }}>{String(c.id).slice(-6).toUpperCase()}</TableCell>
                   <TableCell sx={{ fontWeight: 500 }}>{c.title}</TableCell>
                   <TableCell>{c.category}</TableCell>
                   <TableCell>{c.createdDate}</TableCell>
                   <TableCell>{statusChip(c.status)}</TableCell>
                   <TableCell>
-                    <Button size="small" variant="contained" onClick={() => openDialog(c)}>
+                    <Button size="small" variant="contained" onClick={() => openDialog(c)} sx={{ bgcolor: '#0f5f56', '&:hover': { bgcolor: '#0c4a43' } }}>
                       Update Status
                     </Button>
                   </TableCell>
@@ -79,9 +91,10 @@ const StatusUpdateScreen = ({ complaints, onUpdateComplaint }) => {
 
       {/* Update dialog */}
       <Dialog open={!!selected} onClose={closeDialog} fullWidth maxWidth="sm">
-        <DialogTitle>Update Status — {selected?.id}</DialogTitle>
+        <DialogTitle>Update Status — {String(selected?.id).slice(-6).toUpperCase()}</DialogTitle>
         <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
           {saved && <Alert severity="success">Saved!</Alert>}
+          {saveError && <Alert severity="error">{saveError}</Alert>}
           <Typography variant="body2"><b>Title:</b> {selected?.title}</Typography>
           <Typography variant="body2"><b>Description:</b> {selected?.description}</Typography>
           <FormControl fullWidth>
@@ -100,8 +113,8 @@ const StatusUpdateScreen = ({ complaints, onUpdateComplaint }) => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeDialog}>Cancel</Button>
-          <Button variant="contained" onClick={handleSave}>Save</Button>
+          <Button onClick={closeDialog} disabled={saving}>Cancel</Button>
+          <Button variant="contained" onClick={handleSave} disabled={saving} startIcon={saving && <CircularProgress size={14} color="inherit" />}>{saving ? 'Saving…' : 'Save'}</Button>
         </DialogActions>
       </Dialog>
     </Box>

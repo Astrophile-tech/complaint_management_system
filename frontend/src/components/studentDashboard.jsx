@@ -12,7 +12,7 @@ const StudentDashboard = ({ user, complaints = [] }) => {
   
    // Filter to only this student's complaints
     const mine = useMemo(
-      () => complaints.filter(c => c.createdBy === user?.id),
+      () => complaints.filter(c => String(c.createdBy) === String(user?.id)),
       [complaints, user?.id]
     );
 

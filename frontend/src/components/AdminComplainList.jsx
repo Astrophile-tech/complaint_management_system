@@ -4,6 +4,8 @@ import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
   Dialog, DialogTitle, DialogContent, DialogActions,
   FormControl, InputLabel, Select, MenuItem, TextField,
+  Alert,
+  CircularProgress,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { CAT_ICONS, STATUS_LIST } from '../utils/Constants';
@@ -14,24 +16,44 @@ const AdminComplaintList = ({ complaints, users, onUpdateComplaint, onDeleteComp
   const [selected, setSelected] = useState(null);   // complaint being edited
   const [newStatus, setNewStatus] = useState('');
   const [resolution, setResolution] = useState('');
+  const [saving,     setSaving]     = useState(false);
+  const [saveError,  setSaveError]  = useState('');
+  const [deleteError, setDeleteError] = useState('');
 
   const openDialog = (c) => {
     setSelected(c);
     setNewStatus(c.status);
     setResolution(c.resolution || '');
+    setSaveError('');
   };
 
-  const closeDialog = () => setSelected(null);
+  const closeDialog = () => { setSelected(null); setSaveError(''); };
 
-  const handleSave = () => {
-    if (!selected) return;
-    onUpdateComplaint({ ...selected, status: newStatus, resolution });
-    closeDialog();
+  const handleSave = async () => {
+   if (!selected) return;
+    setSaving(true);
+    setSaveError('');
+    try {
+      await onUpdateComplaint({ ...selected, status: newStatus, resolution });
+      closeDialog();
+    } catch (err) {
+      setSaveError(err.message || 'Failed to update complaint.');
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm('Delete this complaint?')) onDeleteComplaint(id);
+  const handleDelete = async (id) => {
+    if (!window.confirm('Delete this complaint?')) return;
+    setDeleteError('');
+    try {
+      await onDeleteComplaint(id);
+    } catch (err) {
+      setDeleteError(err.message || 'Failed to delete complaint.');
+    }
   };
+
+  const sorted = [...complaints].sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
 
   return (
     <Box p={3}>
@@ -39,6 +61,8 @@ const AdminComplaintList = ({ complaints, users, onUpdateComplaint, onDeleteComp
       <Typography variant="body2" color="text.secondary" mb={2}>
         {complaints.length} total complaint{complaints.length !== 1 ? 's' : ''}
       </Typography>
+
+       {deleteError && <Alert severity="error" sx={{ mb: 2 }}>{deleteError}</Alert>}
 
       <TableContainer component={Card}>
         <Table size="small">
@@ -54,19 +78,17 @@ const AdminComplaintList = ({ complaints, users, onUpdateComplaint, onDeleteComp
             </TableRow>
           </TableHead>
           <TableBody>
-            {complaints.length === 0 ? (
+            {sorted.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={7} align="center">No complaints yet.</TableCell>
               </TableRow>
             ) : (
-              complaints
-                .slice()
-                .sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate))
-                .map(c => {
-                  const who = users.find(u => u.id === c.createdBy);
+              
+                sorted.map(c => {
+                  const who = users.find(u => String(u.id) === String(c.createdBy));
                   return (
                     <TableRow key={c.id} hover>
-                      <TableCell>{c.id}</TableCell>
+                      <TableCell sx={{ fontFamily: 'monospace', fontSize: '0.75rem' }}>{String(c.id).slice(-6).toUpperCase()}</TableCell>
                       <TableCell sx={{ fontWeight: 500 }}>{c.title}</TableCell>
                       <TableCell>
                         <Chip
@@ -104,8 +126,9 @@ const AdminComplaintList = ({ complaints, users, onUpdateComplaint, onDeleteComp
 
       {/* Status update dialog */}
       <Dialog open={!!selected} onClose={closeDialog} fullWidth maxWidth="sm">
-        <DialogTitle>Update Complaint — {selected?.id}</DialogTitle>
+        <DialogTitle>Update Complaint — {String(selected?.id).slice(-6).toUpperCase()}</DialogTitle>
         <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
+          {saveError && <Alert severity="error">{saveError}</Alert>}
           <Typography variant="body2"><b>Title:</b> {selected?.title}</Typography>
           <FormControl fullWidth>
             <InputLabel>Status</InputLabel>
@@ -123,8 +146,8 @@ const AdminComplaintList = ({ complaints, users, onUpdateComplaint, onDeleteComp
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeDialog}>Cancel</Button>
-          <Button variant="contained" onClick={handleSave}>Save</Button>
+          <Button onClick={closeDialog} disabled={saving}>Cancel</Button>
+          <Button variant="contained" onClick={handleSave} disabled={saving} startIcon={saving && <CircularProgress size={14} color="inherit" />}>{saving ? 'Saving…' : 'Save'}</Button>
         </DialogActions>
       </Dialog>
     </Box>

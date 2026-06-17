@@ -1,14 +1,17 @@
 
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Chip, Button, Card, CardContent } from '@mui/material'
+import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Chip, Button, Card, CardContent, Alert, CircularProgress } from '@mui/material'
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
 
 function MyComplaints({complaints, onDeleteComplaint}) {
   const navigate = useNavigate();
+  const [deleteError, setDeleteError] = useState('');
+  const [deletingId, setDeletingId]   = useState(null);
 
    // Show only this student's complaints
   const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
   const mine = currentUser
-    ? complaints.filter(c => c.createdBy === currentUser.id)
+    ? complaints.filter(c => String(c.createdBy) === String(currentUser.id))
     : complaints;
 
   const getStatusColor = (status) => {
@@ -22,9 +25,18 @@ function MyComplaints({complaints, onDeleteComplaint}) {
     }
   }
 
-  const handleDelete = (e, id) => {
+  const handleDelete = async (e, id) => {
     e.stopPropagation(); // Prevent row click firing
-    onDeleteComplaint(id);
+    if (!window.confirm('Delete this complaint?')) return;
+    setDeletingId(id);
+    setDeleteError('');
+    try {
+      await onDeleteComplaint(id);
+    } catch (err) {
+      setDeleteError(err.message || 'Failed to delete complaint.');
+    } finally {
+      setDeletingId(null);
+    }
   };
 
   return (
@@ -32,14 +44,14 @@ function MyComplaints({complaints, onDeleteComplaint}) {
       <Card sx={{ maxWidth: 1100, mx: "auto", borderRadius: 3, boxShadow: 5  }}>
         <CardContent>
         <Typography variant="h4" fontWeight="bold" color="primary" gutterBottom>My Complaints</Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
           Total complaints: {mine.length}
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
           Click on a complaint to view full details
         </Typography>
       
-
+      {deleteError && <Alert severity="error" sx={{ mb: 2 }}>{deleteError}</Alert>}
 
       <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
         <Table>
@@ -76,17 +88,17 @@ function MyComplaints({complaints, onDeleteComplaint}) {
                   "&:hover": {backgroundColor: "#f9fafb"},
                 }}
                 >
-                  <TableCell>{c.id}</TableCell>
+                  <TableCell sx={{ fontFamily: 'monospace', fontSize: '0.75rem' }}>{String(c.id).slice(-6).toUpperCase()}</TableCell>
                   <TableCell>{c.title}</TableCell>
                   <TableCell>{c.category}</TableCell>
-                  <TableCell>{c.dateSubmitted}</TableCell>
+                  <TableCell>{c.dateSubmitted || c.createdDate}</TableCell>
                   <TableCell>
                     <Chip label={c.status} color={getStatusColor(c.status)} size="small" sx={{ fontWeight: 600 }} />
                   </TableCell>
                   <TableCell>
                     
-                    <Button  size="small"  variant="outlined" color="error" onClick={e => handleDelete(e, c.id)}>
-                      Delete
+                    <Button  size="small"  variant="outlined" color="error" disabled={deletingId === c.id} onClick={e => handleDelete(e, c.id)}  startIcon={deletingId === c.id && <CircularProgress size={12} color="inherit" />}>
+                      {deletingId === c.id ? 'Deleting…' : 'Delete'}
                     </Button>
                     
                   </TableCell>
