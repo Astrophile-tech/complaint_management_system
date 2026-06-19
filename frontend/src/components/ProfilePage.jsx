@@ -7,6 +7,7 @@ import {
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
 import api from '../utils/api';
+import { PRIMARY, PRIMARY_DARK } from '../utils/Constants';
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -91,7 +92,7 @@ const ProfilePage = () => {
       <Card sx={{ width: '100%', maxWidth: 600, borderRadius: 3 }}>
         <CardContent sx={{ p: 4 }}>
           <Box display="flex" alignItems="center" gap={2} mb={3}>
-            <Avatar sx={{ bgcolor: '#0f5f56', width: 56, height: 56 }}>
+            <Avatar sx={{ bgcolor: PRIMARY, width: 56, height: 56 }}>
               <PersonIcon fontSize="large" />
             </Avatar>
             <Box>
@@ -152,7 +153,7 @@ const ProfilePage = () => {
               fullWidth
             />
 
-            <Button type="submit" variant="contained" disabled={loading} sx={{ bgcolor: '#0f5f56', '&:hover': { bgcolor: '#0c4a43' } }}>
+            <Button type="submit" variant="contained" disabled={loading} sx={{ bgcolor: PRIMARY, '&:hover': { bgcolor: PRIMARY_DARK } }}>
               {loading ? 'Saving...' : 'Save Changes'}
             </Button>
 

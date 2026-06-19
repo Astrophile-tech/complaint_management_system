@@ -36,8 +36,8 @@ function Statistics({ complaints = [] }) {
   return (
     <Box>
       {/* ── Header ── */}
-      <Box mb={3}>
-        <Typography variant="h5" fontWeight={700}>Statistics</Typography>
+      <Box sx={{ mb: 4, px: 2 }}>
+        <Typography variant="h5" sx={{ flexGrow: 1, textAlign: '', fontWeight: 'bold', fontFamily: 'Playfair Display', letterSpacing: 2 }}>Statistics</Typography>
         <Typography variant="body2" color="text.secondary">
           Detailed breakdown of all complaint data.
         </Typography>
@@ -52,11 +52,11 @@ function Statistics({ complaints = [] }) {
       ) : (
         <>
           {/* ── Charts ── */}
-          <Grid container spacing={2} mb={3}>
+          <Grid container spacing={2} sx={{ mb: 4, px: 2 }}>
 
             {/* Stacked bar — by category */}
             <Grid item xs={12} md={7}>
-              <Card sx={{ height: '100%' }}>
+              <Card sx={{ borderRadius: 4, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', height: '100%',width:355, transition: 'transform 0.2s, box-shadow 0.2s', '&:hover': { transform: 'translateY(-4px)', boxShadow: '0 12px 32px rgba(0,0,0,0.12)' }}}>
                 <CardContent>
                   <Typography variant="subtitle2" gutterBottom>
                     Complaints by Category (Stacked)
@@ -80,7 +80,7 @@ function Statistics({ complaints = [] }) {
 
             {/* Daily volume — last 7 dates */}
             <Grid item xs={12} md={5}>
-              <Card sx={{ height: '100%' }}>
+              <Card sx={{ borderRadius: 4, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', height: '100%',width:355, transition: 'transform 0.2s, box-shadow 0.2s', '&:hover': { transform: 'translateY(-4px)', boxShadow: '0 12px 32px rgba(0,0,0,0.12)' }}}>
                 <CardContent>
                   <Typography variant="subtitle2" gutterBottom>
                     Daily Volume (last 7 dates)
@@ -106,7 +106,7 @@ function Statistics({ complaints = [] }) {
           </Grid>
 
           {/* ── Summary table ── */}
-          <Card>
+          <Card sx={{ borderRadius: 4, overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', mx: 2, transition: 'box-shadow 0.2s', '&:hover': { boxShadow: '0 12px 32px rgba(0,0,0,0.12)' } }}>
             <CardContent>
               <Typography variant="subtitle2" gutterBottom>Summary by Category</Typography>
               {activeCats.length === 0 ? (

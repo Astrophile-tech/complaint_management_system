@@ -6,7 +6,7 @@ import {
   DialogTitle, DialogContent, DialogActions, Alert,
   CircularProgress,
 } from '@mui/material';
-import { STATUS_LIST } from '../utils/Constants';
+import { STATUS_LIST, PRIMARY, PRIMARY_DARK } from '../utils/Constants';
 import statusChip from '../utils/Helpers';
 
 const StatusUpdateScreen = ({ complaints, onUpdateComplaint }) => {
@@ -47,7 +47,7 @@ const StatusUpdateScreen = ({ complaints, onUpdateComplaint }) => {
 
   return (
     <Box p={3}>
-      <Typography variant="h5" gutterBottom>Manage & Resolve Complaints</Typography>
+      <Typography variant="h5" sx={{ flexGrow: 1, textAlign: '', fontWeight: 'bold', fontFamily: 'Playfair Display', letterSpacing: 2 }}>Manage & Resolve Complaints</Typography>
       <Typography variant="body2" color="text.secondary" mb={2}>
         {actionable.length} complaint{actionable.length !== 1 ? 's' : ''} need attention
       </Typography>
@@ -78,7 +78,7 @@ const StatusUpdateScreen = ({ complaints, onUpdateComplaint }) => {
                   <TableCell>{c.createdDate}</TableCell>
                   <TableCell>{statusChip(c.status)}</TableCell>
                   <TableCell>
-                    <Button size="small" variant="contained" onClick={() => openDialog(c)} sx={{ bgcolor: '#0f5f56', '&:hover': { bgcolor: '#0c4a43' } }}>
+                    <Button size="small" variant="contained" onClick={() => openDialog(c)} sx={{ bgcolor: PRIMARY, '&:hover': { bgcolor: PRIMARY_DARK } }}>
                       Update Status
                     </Button>
                   </TableCell>

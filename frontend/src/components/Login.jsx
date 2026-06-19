@@ -10,6 +10,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 import SecurityIcon from '@mui/icons-material/Security';
 import api from '../utils/api';
+import { PRIMARY, PRIMARY_DARK, BG_LIGHT } from '../utils/Constants';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -64,14 +65,13 @@ const Login = () => {
     <>
       <Box sx={{
       minHeight: '100vh',
-      width: '100vw',
-      display: 'flex',
-      margin: 0,
+    display: 'flex',
+    width: '100%',
     }}>
       {/* Left green panel */}
       <Box sx={{
         flex: 1,
-        bgcolor: '#0f5f56',
+        bgcolor: PRIMARY,
         display: { xs: 'none', md: 'flex' },
         flexDirection: 'column',
         alignItems: 'center',
@@ -79,7 +79,7 @@ const Login = () => {
         color: '#fff',
         p: 4
       }}>
-       <SecurityIcon sx={{ fontSize: 60, mb: 2 }} />
+      <SecurityIcon sx={{ fontSize: 60, mb: 2 }} />
         <Typography variant="h3" fontWeight={800} letterSpacing={2}>
           COMPLAINT CONNECT
         </Typography>
@@ -97,7 +97,7 @@ const Login = () => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        bgcolor: '#e8eaed',
+        bgcolor: BG_LIGHT,
         p: 3
       }}>
         <Paper elevation={3} sx={{ p: 5, width: '100%', maxWidth: 420, borderRadius: 3 }}>
@@ -110,10 +110,10 @@ const Login = () => {
     mb: 3
   }}
 >
-  <SecurityIcon
+    <SecurityIcon
     sx={{
       fontSize: 55,
-      color: '#0f5f56',
+      color: PRIMARY,
       mb: 1
     }}
   />
@@ -228,8 +228,8 @@ const Login = () => {
               disabled={loading}
               sx={{
                 mt: 2, mb: 2, py: 1.2,
-                bgcolor: '#0f5f56',
-                '&:hover': { bgcolor: '#0c4a43' },
+                bgcolor: PRIMARY,
+                '&:hover': { bgcolor: PRIMARY_DARK },
                 fontWeight: 600,
                 letterSpacing: 1
               }}
@@ -242,7 +242,7 @@ const Login = () => {
         <Typography align="center" variant="body2">
         Don't have an account?{' '}
 
-        <Link to="/register" style={{ color: '#0f5f56', fontWeight: 700, textDecoration: 'none' }}>
+          <Link to="/register" style={{ color: PRIMARY, fontWeight: 700, textDecoration: 'none' }}>
               Register Now
         </Link>
           </Typography>

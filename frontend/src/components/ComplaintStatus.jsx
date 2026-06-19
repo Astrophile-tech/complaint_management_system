@@ -54,7 +54,7 @@ function ComplaintStatus() {
         <CardContent sx={{ p: 4 }}>
  
           {/* ── Header ── */}
-          <Typography variant="h4" fontWeight="bold" color="primary">
+          <Typography variant="h4" sx={{ flexGrow: 1, textAlign: '', fontWeight: 'bold', fontFamily: 'Playfair Display', letterSpacing: 2 }}>
             Complaint Tracking
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>

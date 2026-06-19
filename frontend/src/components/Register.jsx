@@ -10,15 +10,16 @@ import LockIcon from '@mui/icons-material/Lock';
 import PersonIcon from '@mui/icons-material/Person';
 import SecurityIcon from '@mui/icons-material/Security';
 import api from '../utils/api';
+import { PRIMARY, PRIMARY_DARK } from '../utils/Constants';
 
 const greenInput = {
   mb: 1.5,
   '& .MuiOutlinedInput-root': {
     borderRadius: '8px',
     backgroundColor: '#fff',
-    '& fieldset': { borderColor: '#0f766e' },
-    '&:hover fieldset': { borderColor: '#115e59' },
-    '&.Mui-focused fieldset': { borderColor: '#0f766e', borderWidth: '2px' },
+    '& fieldset': { borderColor: PRIMARY },
+    '&:hover fieldset': { borderColor: PRIMARY_DARK },
+    '&.Mui-focused fieldset': { borderColor: PRIMARY, borderWidth: '2px' },
   }
 };
 
@@ -79,11 +80,11 @@ const Register = () => {
     <>
       <Box sx={{
       minHeight: '100vh',
-      width: '100vw',
+      width: '100%',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      bgcolor: '#f8fafc', // Ultra-clean, modern background tint
+      bgcolor: PRIMARY, // Ultra-clean, modern background tint
       p: 2
     }}>
       <Paper 
@@ -108,10 +109,10 @@ const Register = () => {
     mb: 2
   }}
 >
-  <SecurityIcon
+    <SecurityIcon
     sx={{
       fontSize: 62,
-      color: '#0f766e',
+      color: PRIMARY,
       mr: 1
     }}
   />
@@ -119,7 +120,7 @@ const Register = () => {
   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
     <Typography
       sx={{
-        color: '#0f766e',
+          color: PRIMARY,
         fontWeight: 800,
         fontSize: '1.35rem',
         lineHeight: 1.05,
@@ -131,7 +132,7 @@ const Register = () => {
 
     <Typography
       sx={{
-        color: '#0f766e',
+        color: PRIMARY,
         fontWeight: 800,
         fontSize: '1.35rem',
         lineHeight: 1.05,
@@ -250,8 +251,8 @@ const Register = () => {
             sx={{
               mt: 1, mb: 2.5, py: 1.2,
               borderRadius: '8px',
-              bgcolor: '#0f766e',
-              '&:hover': { bgcolor: '#115e59' },
+              bgcolor: PRIMARY,
+              '&:hover': { bgcolor: PRIMARY_DARK },
               fontWeight: 700,
               fontSize: '0.95rem',
               letterSpacing: '0.5px',
@@ -264,7 +265,7 @@ const Register = () => {
          {/* Core Navigation Toggle Link */}
           <Typography align="center" variant="body2" color="#64748b">
             Already have an account?{' '}
-           <Link to="/login" style={{ color: '#0f766e', fontWeight: 700, textDecoration: 'none' }}>
+           <Link to="/login" style={{ color: PRIMARY, fontWeight: 700, textDecoration: 'none' }}>
               Log In
             </Link>
           </Typography>

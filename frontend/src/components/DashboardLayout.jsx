@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { Box, AppBar, Toolbar, Typography, Tooltip, IconButton } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import SecurityIcon from '@mui/icons-material/Security';
 import Sidebar from './Sidebar';
 import api from '../utils/api';
 
@@ -33,11 +34,14 @@ const DashboardLayout = () => {
 
   return (
     <>
-      <AppBar position="static" sx={{ bgcolor: '#0e1c2c' }}>
+      <AppBar position="static" sx={{ bgcolor: '#0f5f56' }}>
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Playfair Display' }}>
-            CAMPUS COMPLAINT MANAGEMENT SYSTEM
+          <Box sx={{flexGrow:1, display:'flex', alignItems:'center'}}>
+            <SecurityIcon sx={{ fontSize: 40 }}/>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: '', fontWeight: 'bold', fontFamily: 'Playfair Display', letterSpacing: 2 }}>          
+            COMPLAINT CONNECT
           </Typography>
+        </Box>
 
           <Tooltip title="Profile">
             <IconButton color="inherit" onClick={() => navigate('/profile')}>

@@ -3,10 +3,10 @@ import { NavLink } from 'react-router-dom'
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ListAltIcon from '@mui/icons-material/ListAlt';
-import TrackChangesIcon from '@mui/icons-material/TrackChanges';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import BuildIcon from '@mui/icons-material/Build';
 import BarChartIcon from '@mui/icons-material/BarChart';
+import ManageSearchIcon from '@mui/icons-material/ManageSearch';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { DRAWER_W } from '../utils/Constants';
 
@@ -19,7 +19,6 @@ const STUDENT_NAV = [
   { id: 'dashboard',     label: 'Dashboard',      icon: <DashboardIcon />, path: '/studentdash' },
   { id: 'submit',        label: 'New Complaint',  icon: <AddCircleIcon />, path: '/submit' },
   { id: 'my-complaints', label: 'My Complaints',  icon: <ListAltIcon />, path: '/mycomplaints' },
-  { id: 'tracking',      label: 'Track Status',   icon: <TrackChangesIcon />, path: '/status' },
   { id: 'profile',      label: 'Profile',   icon: <AccountCircleIcon />, path: '/profile' },
   
 ];
@@ -27,6 +26,7 @@ const ADMIN_NAV = [
   { id: 'dashboard',      label: 'Dashboard',        icon: <DashboardIcon />, path: '/admindash' },
   { id: 'all-complaints', label: 'All Complaints',   icon: <FolderOpenIcon />, path: '/admin-complaints' },
   { id: 'manage',         label: 'Manage & Resolve', icon: <BuildIcon />, path: '/status-update' },
+  { id: 'filter',         label: 'Filter Complaints', icon: <ManageSearchIcon />, path: '/filter' },
   { id: 'statistics',     label: 'Statistics',       icon: <BarChartIcon />, path: '/statistics' },
   { id: 'profile',        label: 'Profile',          icon: <AccountCircleIcon />, path: '/profile' },
 
@@ -35,7 +35,7 @@ const ADMIN_NAV = [
 function Sidebar({ role }) {
   const items = role === 'admin' ? ADMIN_NAV : STUDENT_NAV;
   return (
-    <Box sx={{ width: DRAWER_W, flexShrink: 0, borderRight: '1px solid', borderColor: 'divider', bgcolor: 'background.paper', minHeight: '100vh', pt: 2, display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
+    <Box sx={{ width: DRAWER_W, flexShrink: 0, borderRight: '1px solid #e5e7eb', borderColor: 'divider', bgcolor: 'background.paper', minHeight: '100vh', pt: 2, display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
       <Box>
       <Typography variant="caption" color="text.secondary" fontWeight={700}
         sx={{ px: 2.5, pb: 1, display: 'block', textTransform: 'uppercase', letterSpacing: '0.6px' }}>

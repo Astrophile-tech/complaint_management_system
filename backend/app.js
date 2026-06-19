@@ -1,16 +1,20 @@
 require('dotenv').config();
 const express = require('express');
-const cors = require('cors');
+const app = express();
+
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const AdminConfig = require('./models/AdminConfig');
+
+const cors = require('cors');
+app.use(cors());
 
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const complaintRoutes = require('./routes/complaintRoutes');
 
-const app = express();
-app.use(cors());
+
+
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);

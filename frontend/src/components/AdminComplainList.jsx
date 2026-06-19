@@ -57,7 +57,7 @@ const AdminComplaintList = ({ complaints, users, onUpdateComplaint, onDeleteComp
 
   return (
     <Box p={3}>
-      <Typography variant="h5" gutterBottom>All Complaints</Typography>
+      <Typography variant="h5" sx={{ flexGrow: 1, textAlign: '', fontWeight: 'bold', fontFamily: 'Playfair Display', letterSpacing: 2 }}>All Complaints</Typography>
       <Typography variant="body2" color="text.secondary" mb={2}>
         {complaints.length} total complaint{complaints.length !== 1 ? 's' : ''}
       </Typography>
