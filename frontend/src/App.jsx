@@ -14,9 +14,8 @@ import AdminComplaintList from './components/AdminComplainList';
 import StatusUpdateScreen from './components/StatusUpdateScreen';
 import FilterInterface from './components/FilterInterface';
 import Statistics from './components/Statistics';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import api from './utils/api';
-import { useCallback } from 'react';
 import ProfilePage from './components/ProfilePage';
 
 // ─── Route Guards ─────────────────────────────────────────────────────────────
@@ -37,36 +36,35 @@ const RoleRoute = ({ role, children }) => {
 function App () {
   const [complaints, setComplaints] = useState([]);
   const [users, setUsers]           = useState([]);
-  const [loadingData, setLoadingData] = useState(false);
+  const hasFetched = useRef(false);
  
   const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
-  const isLoggedIn  = !!localStorage.getItem('token');
+  const isLoggedIn  = Boolean(localStorage.getItem('token'));
  
   // ── Fetch all data the dashboards need ──────────────────────────────────────
   const fetchData = useCallback(async () => {
     if (!isLoggedIn) return;
-    setLoadingData(true);
     try {
-      const [complaintsData, usersData] = await Promise.all([
-        api.get('/complaints'),
-        api.get('/users'),
-      ]);
+      // Always fetch complaints
+      const complaintsData = await api.get('/complaints');
       setComplaints(complaintsData);
+
+      // Only fetch users if admin (requires adminOnly permission on backend)
+      if (currentUser?.role === 'admin') {
+        const usersData = await api.get('/users');
       setUsers(usersData);
+      }
     } catch (err) {
       console.error('Failed to load data:', err.message);
-    } finally {
-      setLoadingData(false);
     }
-  }, [isLoggedIn]);
- 
-  useEffect(() => {
-  const loadData = () => {
-    fetchData();
-  };
+  }, [isLoggedIn, currentUser?.role]);
 
-  loadData();
-}, [fetchData]);
+  useEffect(() => {
+    if (isLoggedIn && !hasFetched.current) {
+      hasFetched.current = true;
+      fetchData();
+    }
+  }, [isLoggedIn, fetchData]);
  
   // ── Complaint CRUD handlers ──────────────────────────────────────────────────
   const addComplaint = async (complaintData) => {
@@ -134,7 +132,7 @@ function App () {
                 <RoleRoute role="student">
                   <MyComplaints complaints={complaints} onDeleteComplaint={deleteComplaint} />
                 </RoleRoute>
-            } />\
+            } />
 
             {/* Admin routes */}
              <Route path="/admindash" element={

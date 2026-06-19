@@ -3,7 +3,7 @@ import {
   Divider, Stack, Button,
 } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { CAT_ICONS } from '../utils/Constants';
+import { CAT_ICONS, PRIMARY, PRIMARY_DARK } from '../utils/Constants';
 import statusChip from '../utils/Helpers';
 
 function ComplaintDetails() {
@@ -124,7 +124,7 @@ function ComplaintDetails() {
           <Divider sx={{ my: 3 }} />
 
           {/* ── Actions ── */}
-          <Box display="flex" gap={2} flexWrap="wrap">
+          <Box display="flex" gap={4} flexWrap="wrap">
             <Button
               variant="outlined"
               onClick={() => navigate(isAdmin ? '/admin-complaints' : '/mycomplaints')}
@@ -137,7 +137,7 @@ function ComplaintDetails() {
             {!isAdmin && (
               <Button
                 variant="contained"
-                sx={{ flex: 1, bgcolor: '#0f5f56', '&:hover': { bgcolor: '#0c4a43' } }}
+                sx={{ flex: 1, bgcolor: PRIMARY, '&:hover': { bgcolor: PRIMARY_DARK } }}
                 onClick={() => navigate('/status', { state: complaint })}
               >
                 Track Status
@@ -145,9 +145,9 @@ function ComplaintDetails() {
             )}
 
             {isAdmin && complaint.status !== 'Resolved' && (
-              <Button
+                <Button
                 variant="contained"
-                sx={{ flex: 1, bgcolor: '#0f5f56', '&:hover': { bgcolor: '#0c4a43' } }}
+                sx={{ flex: 1, bgcolor: PRIMARY, '&:hover': { bgcolor: PRIMARY_DARK } }}
                 onClick={() => navigate('/status-update')}
               >
                 Manage Complaint

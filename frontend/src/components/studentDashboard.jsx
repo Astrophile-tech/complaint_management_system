@@ -2,7 +2,8 @@ import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Box, Typography, Grid, Card, CardContent, Button, TableContainer, Table, TableCell, TableRow, TableBody, TableHead, Chip } from '@mui/material'
 import { PieChart, Pie, Legend, Tooltip as RTooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Cell } from 'recharts';
-import { CATEGORIES, CAT_ICONS, PIE_COLORS, BAR_COLORS } from '../utils/Constants';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { CATEGORIES, CAT_ICONS, PIE_COLORS, BAR_COLORS, PRIMARY, PRIMARY_DARK } from '../utils/Constants';
 import StatCard from '../utils/StatCard';
 import statusChip from '../utils/Helpers';
 
@@ -42,30 +43,31 @@ const StudentDashboard = ({ user, complaints = [] }) => {
   ];
 
   return (
-    <Box>
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mb: 3 }}>
-        <Typography variant="h5">My Dashboard</Typography>
-        <Typography variant="body2" color="text.secondary">
-          Welcome {user?.name ? `, ${user.name}` : ''}! Here's your complaint activity
-        </Typography>
+    <Box sx={{ bgcolor: '#f8fafc', minHeight: '100vh', pb: 4 }}>
+      <Box sx={{ background: `linear-gradient(135deg, ${PRIMARY} 0%, #0a4a42 100%)`, color: '#fff', p: 4, mb: 4, borderRadius: 3, boxShadow: '0 8px 24px rgba(0,0,0,0.12)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Box>
+          <Typography variant="h4" sx={{ flexGrow: 1, textAlign: '', fontWeight: 'bold', fontFamily: 'Playfair Display', letterSpacing: 2 }}>Welcome{user?.name ? `, ${user.name}` : ''}! Here's your complaint activity</Typography>
+        </Box>
+        <Button variant="contained" size="large" startIcon={<AddCircleIcon />} onClick={() => navigate('/submit')} sx={{ bgcolor: '#fff', color: PRIMARY, fontWeight: 700, '&:hover': { bgcolor: '#f0f0f0' } }}>
+          New Complaint
+        </Button>
       </Box>
      
-     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mb: 3 }}>
-      <Grid container spacing={10} mb={3}>
+     <Grid container spacing={10} sx={{ mb: 4, px: 2 }}>
         {stats.map(s => (
-          <Grid item xs={12} sm={6} md={4} key={s.label}>
+          <Grid item xs={12} sm={6} md={3} key={s.label}>
             <StatCard {...s} />
           </Grid>
         ))}
       </Grid>
-    </Box>
+    
     
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mb: 3,  }}>
-      <Grid container spacing={2} mb={3}>
-        <Grid item xs={12} md={5}>
-          <Card sx={{ width: 355 }}>
+      <Grid container spacing={10} mb={3}>
+        <Grid item xs={12} md={6}>
+          <Card sx={{ borderRadius: 4, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', height: '100%',width:355, transition: 'transform 0.2s, box-shadow 0.2s', '&:hover': { transform: 'translateY(-4px)', boxShadow: '0 12px 32px rgba(0,0,0,0.12)' } }}>
             <CardContent>
-              <Typography variant="subtitle2" gutterBottom>Status Breakdown</Typography>
+              <Typography variant="subtitle1" fontWeight={700} gutterBottom>Status Breakdown</Typography>
               {mine.length === 0 ? (
                 <Box textAlign="center" py={3}>
                   <Typography color="text.secondary" fontSize="0.85rem">No complaints yet</Typography>
@@ -85,10 +87,10 @@ const StudentDashboard = ({ user, complaints = [] }) => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} md={7}>
-          <Card sx={{ width: 355 }}>
+        <Grid item xs={12} md={6}>
+          <Card sx={{ borderRadius: 4, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', height: '100%',width: 355, transition: 'transform 0.2s, box-shadow 0.2s', '&:hover': { transform: 'translateY(-4px)', boxShadow: '0 12px 32px rgba(0,0,0,0.12)' } }}>
             <CardContent>
-              <Typography variant="subtitle2" gutterBottom>Complaints by Category</Typography>
+              <Typography variant="subtitle1" fontWeight={700} gutterBottom>Complaints by Category</Typography>
               {barData.length === 0 ? (
                 <Box textAlign="center" py={3}>
                   <Typography color="text.secondary" fontSize="0.85rem">No data yet</Typography>
@@ -109,40 +111,40 @@ const StudentDashboard = ({ user, complaints = [] }) => {
             </CardContent>
           </Card>
         </Grid>
-      </Grid>
-    </Box>
+    </Grid>
 
-      <Card>
+      <Card sx={{ borderRadius: 4, overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', mx: 2, transition: 'box-shadow 0.2s', '&:hover': { boxShadow: '0 12px 32px rgba(0,0,0,0.12)' } }}>
         <CardContent>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-            <Typography variant="subtitle2">Recent Complaints</Typography>
-            <Button size="small" onClick={() => navigate('/mycomplaints')} sx={{ textTransform: 'none' }}>
-              View all →
-            </Button>
+            <Typography variant="h6" fontWeight={700}>Recent Complaints</Typography>
+            {recent.length > 0 && (
+              <Button size="small" onClick={() => navigate('/mycomplaints')} sx={{ color: PRIMARY, textTransform: 'none', fontWeight: 600 }}>
+                View all →
+              </Button>
+            )}
           </Box>
           {recent.length === 0 ? (
-            <Box textAlign="center" py={3}>
-              <Typography color="text.secondary">No complaints submitted yet.</Typography>
-              <Button variant="contained" size="small" sx={{ mt: 1.5 }} onClick={() => navigate('/submit')}>
-                Submit your first complaint
+            <Box textAlign="center" py={4}>
+              <Typography color="text.secondary" mb={2}>No complaints submitted yet.</Typography>
+              <Button variant="contained" size="large" startIcon={<AddCircleIcon />} onClick={() => navigate('/submit')} sx={{ bgcolor: PRIMARY, '&:hover': { bgcolor: PRIMARY_DARK } }}>
+                Submit Your First Complaint
               </Button>
             </Box>
           ) : (
             <TableContainer>
               <Table size="small">
                 <TableHead>
-                  <TableRow>
-                    <TableCell>Title</TableCell>
-                    <TableCell>Category</TableCell>
-                    <TableCell>Location</TableCell>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Status</TableCell>
+                  <TableRow sx={{ bgcolor: '#f0f4f8' }}>
+                    <TableCell sx={{ fontWeight: 700, color: PRIMARY }}>Title</TableCell>
+                    <TableCell sx={{ fontWeight: 700, color: PRIMARY }}>Category</TableCell>
+                    <TableCell sx={{ fontWeight: 700, color: PRIMARY }}>Location</TableCell>
+                    <TableCell sx={{ fontWeight: 700, color: PRIMARY }}>Date</TableCell>
+                    <TableCell sx={{ fontWeight: 700, color: PRIMARY }}>Status</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {recent.map(c => (
-                    <TableRow key={c.id} hover hover sx={{ cursor: 'pointer' }}
-                     onClick={() => navigate('/details', { state: c })}>
+                    <TableRow key={c.id} hover sx={{ cursor: 'pointer', '&:hover': { bgcolor: '#f8fafc' } }} onClick={() => navigate('/details', { state: c })}>
                       <TableCell sx={{ fontWeight: 500 }}>{c.title}</TableCell>
                       <TableCell>
                         <Chip label={`${CAT_ICONS[c.category]} ${c.category}`} size="small" variant="outlined" />
@@ -158,6 +160,7 @@ const StudentDashboard = ({ user, complaints = [] }) => {
           )}
         </CardContent>
       </Card>
+    </Box>
     </Box>
   );
 }

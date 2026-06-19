@@ -1,6 +1,12 @@
 // ─── Layout ───────────────────────────────────────────────────────────────────
 const DRAWER_W = 230;
 
+// ─── Theme colours (shared) ───────────────────────────────────────────────────
+const PRIMARY = '#0f5f56';
+const PRIMARY_DARK = '#0c4a43';
+const BG_LIGHT = '#e8eaed';
+const SURFACE = '#ffffff';
+const TEXT_MUTED = '#64748b';
 // ─── Complaint categories ─────────────────────────────────────────────────────
 const CATEGORIES = [
   'Classroom', 'Laboratory', 'Hostel', 'Library',
@@ -37,4 +43,5 @@ const BAR_COLORS = [
 // Admin credentials are seeded from ADMIN_INITIAL_PASSWORD in backend/.env
 // on first server start and stored (hashed) in the adminconfigs collection.
 
-export { DRAWER_W, CATEGORIES, CAT_ICONS, PIE_COLORS, BAR_COLORS, STATUS_LIST };
+export { DRAWER_W, CATEGORIES, CAT_ICONS, PIE_COLORS, BAR_COLORS, STATUS_LIST,
+  PRIMARY, PRIMARY_DARK, BG_LIGHT, SURFACE, TEXT_MUTED };

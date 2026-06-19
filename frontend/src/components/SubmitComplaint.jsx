@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Box, Typography, TextField, MenuItem, Button, Card, CardContent, Alert, CircularProgress } from '@mui/material'
-import { CATEGORIES } from '../utils/Constants'
+import { CATEGORIES, PRIMARY, PRIMARY_DARK } from '../utils/Constants'
 import { useNavigate } from 'react-router-dom'
 
 function SubmitComplaint({addComplaint, complaints}) {
@@ -36,7 +36,7 @@ function SubmitComplaint({addComplaint, complaints}) {
   return (
     <Box sx={{ p: 3 }}>
       <Box sx={{ 
-        bgcolor: '#012243', 
+        bgcolor: PRIMARY, 
         color: '#ffffff', 
         p: 3, 
         mb: 3, 
@@ -93,7 +93,7 @@ function SubmitComplaint({addComplaint, complaints}) {
             />
             
             <Button type="submit" variant="contained" disabled={loading} startIcon={loading && <CircularProgress size={16} color="inherit" />}
-             sx={{ bgcolor: '#0f5f56', '&:hover': { bgcolor: '#0c4a43' } }}>
+             sx={{ bgcolor: PRIMARY, '&:hover': { bgcolor: PRIMARY_DARK } }}>
                {loading ? 'Submitting…' : 'Submit Complaint'}
             </Button>
           </Box>

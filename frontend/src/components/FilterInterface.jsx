@@ -41,7 +41,7 @@ const FilterInterface = ({ complaints = [] }) => {
 
   return (
     <Box p={3}>
-      <Typography variant="h5" gutterBottom>Filter Complaints</Typography>
+      <Typography variant="h5" sx={{ flexGrow: 1, textAlign: '', fontWeight: 'bold', fontFamily: 'Playfair Display', letterSpacing: 2 }}>Filter Complaints</Typography>
       <Typography variant="body2" color="text.secondary" mb={2}>
         Showing {filtered.length} of {visible.length} complaint{visible.length !== 1 ? 's' : ''}
       </Typography>
