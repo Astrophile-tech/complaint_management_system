@@ -17,6 +17,7 @@ import Statistics from './components/Statistics';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import api from './utils/api';
 import ProfilePage from './components/ProfilePage';
+import Home from './components/Home';
 
 // ─── Route Guards ─────────────────────────────────────────────────────────────
 const PrivateRoute = ({ children }) => {
@@ -108,9 +109,10 @@ function App () {
     
         <Routes>
           {/* Authentication */}
+          <Route path="/home" element={<Home />} />
           <Route path="/login" element={<Login onLoginSuccess={fetchData}/>} />
           <Route path="/register" element={<Register />} />
-          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/" element={<Navigate to="/home" replace />} />
 
           {/* Protected Dashboard Routes */}
           <Route element={<PrivateRoute><DashboardLayout /></PrivateRoute>}>
@@ -174,7 +176,7 @@ function App () {
           <Route path="/details" element={<ComplaintDetails />} />
           <Route path="/status"  element={<ComplaintStatus  />} />
           <Route path="/profile" element={<ProfilePage onProfileUpdate={fetchData} />} />
-        
+          
           
           </Route>
           
