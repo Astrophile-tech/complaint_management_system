@@ -26,7 +26,7 @@ function MyComplaints({complaints, onDeleteComplaint}) {
   }
 
   const handleDelete = async (e, id) => {
-    e.stopPropagation(); // Prevent row click firing
+    e.stopPropagation(); // Prevent row click 
     if (!window.confirm('Delete this complaint?')) return;
     setDeletingId(id);
     setDeleteError('');

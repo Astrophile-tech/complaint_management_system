@@ -10,7 +10,7 @@ function SubmitComplaint({addComplaint, complaints}) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleChange = field => event => {
+  const handleChange = field => event => {          //update the form state
     setValues(prev => ({...prev, [field]: event.target.value }))
   }
 
@@ -22,7 +22,7 @@ function SubmitComplaint({addComplaint, complaints}) {
       return;
     }
 
-     setLoading(true);
+     setLoading(true);              // disable submit button to prevent double clicks
     try {
       await addComplaint(values);       // handled in App.jsx → api.post('/complaints', ...)
       navigate('/mycomplaints');
