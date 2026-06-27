@@ -91,11 +91,11 @@ const ProfilePage = () => {
     <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
       <Card sx={{ width: '100%', maxWidth: 600, borderRadius: 3 }}>
         <CardContent sx={{ p: 4 }}>
-          <Box display="flex" alignItems="center" gap={2} mb={3}>
+          <Box sx={{display:"flex", flexDirection:"column", alignItems:"center", gap:2, mb:3}} >
             <Avatar sx={{ bgcolor: PRIMARY, width: 56, height: 56 }}>
               <PersonIcon fontSize="large" />
             </Avatar>
-            <Box>
+            <Box textAlign="center">
               <Typography variant="h5" fontWeight="bold">{profile.name || 'Profile'}</Typography>
               <Typography variant="body2" color="text.secondary" textTransform="capitalize">
                 {profile.role}
