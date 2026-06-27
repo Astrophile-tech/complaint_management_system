@@ -115,7 +115,7 @@ function App () {
           <Route path="/" element={<Navigate to="/home" replace />} />
 
           {/* Protected Dashboard Routes */}
-          <Route element={<PrivateRoute><DashboardLayout /></PrivateRoute>}>
+          <Route element={<PrivateRoute><DashboardLayout user={currentUser}/></PrivateRoute>}>
 
             {/* Student routes */}
             <Route path="/studentdash" element={

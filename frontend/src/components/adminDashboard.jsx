@@ -54,15 +54,19 @@ const AdminDashboard = ({ complaints = [] , users = [] }) => {
       </Box>
 
       {/* Stat cards */}
-    <Grid container spacing={10} sx={{ mb: 4, px: 2 }}>
+    
+    <Box sx={{ display: 'flex', justifyContent: "center"  }}>
+    <Grid container spacing={20} sx={{ mb: 4, px: 2 }}>
       {stats.map(s => (
         <Grid item xs={12} sm={6} md={3} key={s.label}>
           <StatCard {...s} />
         </Grid>
       ))}
     </Grid>
+    </Box>
 
       {/* KPI row */}
+    <Box sx={{ display: 'flex', justifyContent: "center"  }}>
     <Grid container spacing={10} sx={{ mb: 4, px: 2 }}>
         <Grid item xs={12} sm={4} md={5}>
           <Card sx={{
@@ -116,8 +120,10 @@ const AdminDashboard = ({ complaints = [] , users = [] }) => {
           </Card>
         </Grid>
     </Grid>
+  </Box>
 
       {/* Charts */}
+       <Box sx={{ display: 'flex', justifyContent: "center"  }}>
     <Grid container spacing={3} sx={{ mb: 4, px: 2 }}>
         <Grid item xs={12} md={6}>
           <Card sx={{ borderRadius: 4, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', height: '100%',width:355, transition: 'transform 0.2s, box-shadow 0.2s', '&:hover': { transform: 'translateY(-4px)', boxShadow: '0 12px 32px rgba(0,0,0,0.12)' } }}>
@@ -163,6 +169,7 @@ const AdminDashboard = ({ complaints = [] , users = [] }) => {
           </Card>
         </Grid>
     </Grid>
+    </Box>
 
       {/* Recent table */}
       <Card sx={{ borderRadius: 4, overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', mx: 2, transition: 'box-shadow 0.2s', '&:hover': { boxShadow: '0 12px 32px rgba(0,0,0,0.12)' } }}>

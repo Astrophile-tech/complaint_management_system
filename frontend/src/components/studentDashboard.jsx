@@ -52,18 +52,20 @@ const StudentDashboard = ({ user, complaints = [] }) => {
           New Complaint
         </Button>
       </Box>
-     
-     <Grid container spacing={10} sx={{ mb: 4, px: 2 }}>
+    
+    <Box sx={{ display: 'flex', justifyContent: "center"  }}>
+     <Grid container spacing={20} justifyContent="center" sx={{ mb: 4, px: 2 }}>
         {stats.map(s => (
           <Grid item xs={12} sm={6} md={3} key={s.label}>
             <StatCard {...s} />
           </Grid>
         ))}
       </Grid>
+    </Box> 
     
     
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mb: 3,  }}>
-      <Grid container spacing={10} mb={3}>
+    <Box sx={{ display: 'flex', justifyContent: 'center' }} >
+      <Grid container spacing={4} sx={{ mb: 3, px: 2 }}>
         <Grid item xs={12} md={6}>
           <Card sx={{ borderRadius: 4, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', height: '100%',width:355, transition: 'transform 0.2s, box-shadow 0.2s', '&:hover': { transform: 'translateY(-4px)', boxShadow: '0 12px 32px rgba(0,0,0,0.12)' } }}>
             <CardContent>
@@ -73,21 +75,23 @@ const StudentDashboard = ({ user, complaints = [] }) => {
                   <Typography color="text.secondary" fontSize="0.85rem">No complaints yet</Typography>
                 </Box>
               ) : (
+              <Box sx={{display:'flex', justifyContent:'center', mt: 1}}>
                 <ResponsiveContainer width="100%" height={200}>
                   <PieChart>
                     <Pie data={pieData} cx="50%" cy="50%" innerRadius={55} outerRadius={80}
                       paddingAngle={3} dataKey="value">
                       {pieData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
                     </Pie>
-                    <Legend />
+                    <Legend align='center' verticalAlign='bottom' />
                     <RTooltip />
                   </PieChart>
                 </ResponsiveContainer>
+              </Box>
               )}
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid size={{ xs: 12, md: 5 }} display="flex" justifyContent="center">
           <Card sx={{ borderRadius: 4, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', height: '100%',width: 355, transition: 'transform 0.2s, box-shadow 0.2s', '&:hover': { transform: 'translateY(-4px)', boxShadow: '0 12px 32px rgba(0,0,0,0.12)' } }}>
             <CardContent>
               <Typography variant="subtitle1" fontWeight={700} gutterBottom>Complaints by Category</Typography>
@@ -112,6 +116,7 @@ const StudentDashboard = ({ user, complaints = [] }) => {
           </Card>
         </Grid>
     </Grid>
+    </Box>
 
       <Card sx={{ borderRadius: 4, overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', mx: 2, transition: 'box-shadow 0.2s', '&:hover': { boxShadow: '0 12px 32px rgba(0,0,0,0.12)' } }}>
         <CardContent>
@@ -161,7 +166,7 @@ const StudentDashboard = ({ user, complaints = [] }) => {
         </CardContent>
       </Card>
     </Box>
-    </Box>
+    
   );
 }
 
