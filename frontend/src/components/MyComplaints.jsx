@@ -75,12 +75,12 @@ function MyComplaints({complaints, onComplaintDelete}) {
     <Box sx={{ minHeight: "100vh", bgcolor: "#f4f6f8", p: 4}}>
       <Card sx={{ maxWidth: 1100, mx: "auto", borderRadius: 3, boxShadow: 5  }}>
         <CardContent>
-        <Typography variant="h4" fontWeight="bold" color="primary" gutterBottom>My Complaints</Typography>
+        <Typography variant="h4" fontWeight="bold" color="primary" gutterBottom sx={{ flexGrow: 1, textAlign: '', fontWeight: 'bold', fontFamily: 'Playfair Display', letterSpacing: 2 }}>My Complaints</Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-          Total complaints: {mine.length}
+          <b>Total complaints: {mine.length}</b>
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-          Click on a complaint to view full details
+          <b>Click on a complaint to view full details</b>
         </Typography>
       
       <TableContainer component={Paper} sx={{ borderRadius: 2 }}>

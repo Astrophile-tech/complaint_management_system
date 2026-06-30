@@ -14,6 +14,7 @@ import AdminComplaintList from './components/AdminComplainList';
 import StatusUpdateScreen from './components/StatusUpdateScreen';
 import FilterInterface from './components/FilterInterface';
 import Statistics from './components/Statistics';
+import ForgotPassword from './components/ForgotPassword';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import api from './utils/api';
 import ProfilePage from './components/ProfilePage';
@@ -116,6 +117,7 @@ function App () {
           {/* Authentication */}
           <Route path="/home" element={<Home />} />
           <Route path="/login" element={<Login onLoginSuccess={fetchData}/>} />
+          <Route path="/forgot-password" element={<ForgotPassword/>} />
           <Route path="/register" element={<Register />} />
           <Route path="/" element={<Navigate to="/home" replace />} />
 
@@ -153,8 +155,6 @@ function App () {
                   <AdminComplaintList
                     complaints={complaints}
                     users={users}
-                    onUpdateComplaint={updateComplaint}
-                    onDeleteComplaint={deleteComplaint}
                   />
                 </RoleRoute>
             } />

@@ -49,7 +49,7 @@ const FilterInterface = ({ complaints = [] }) => {
       {/* ── Filter controls ── */}
       <Card sx={{ mb: 3 }}>
         <CardContent>
-          <Box display="flex" gap={2} flexWrap="wrap" alignItems="center">
+          <Box sx={{display:"flex", gap:2, flexWrap:"wrap", alignItems:"center"}}>
             <TextField
               placeholder="Search title, description or location…"
               value={search}
@@ -129,7 +129,7 @@ const FilterInterface = ({ complaints = [] }) => {
               filtered.map(c => (
                 <TableRow key={c.id} hover>
                   <TableCell sx={{ fontFamily: 'monospace', fontSize: '0.75rem' }}>
-                    #{String(c.id).slice(-6).toUpperCase()}
+                    {String(c.id).slice(-6).toUpperCase()}
                   </TableCell>
                   <TableCell sx={{ fontWeight: 500 }}>{c.title}</TableCell>
                   <TableCell>

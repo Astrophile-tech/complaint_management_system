@@ -48,7 +48,7 @@ function ComplaintDetails() {
           {/* ── Header ── */}
           <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={1}>
             <Box>
-              <Typography variant="h4" fontWeight="bold" color="primary">
+              <Typography variant="h4" color='primary' sx={{ flexGrow: 1, textAlign: '', fontWeight: 'bold', fontFamily: 'Playfair Display', letterSpacing: 2 }}>
                 Complaint Details
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -63,17 +63,17 @@ function ComplaintDetails() {
           {/* ── Details ── */}
           <Stack spacing={2}>
             <Box display="flex" gap={1}>
-              <Typography fontWeight={700} minWidth={120}>ID</Typography>
-              <Typography color="text.secondary" fontFamily="monospace">#{shortId}</Typography>
+              <Typography fontWeight={700} minWidth={120}><b>Complaint ID</b></Typography>
+              <Typography color="text.secondary" fontFamily="monospace">{shortId}</Typography>
             </Box>
 
             <Box display="flex" gap={1}>
-              <Typography fontWeight={700} minWidth={120}>Title</Typography>
+              <Typography fontWeight={700} minWidth={120}><b>Title</b></Typography>
               <Typography>{complaint.title}</Typography>
             </Box>
 
             <Box display="flex" gap={1} alignItems="center">
-              <Typography fontWeight={700} minWidth={120}>Category</Typography>
+              <Typography fontWeight={700} minWidth={120}><b>Category</b></Typography>
               <Chip
                 label={`${CAT_ICONS[complaint.category] ?? '📋'} ${complaint.category}`}
                 size="small"
@@ -82,17 +82,17 @@ function ComplaintDetails() {
             </Box>
 
             <Box display="flex" gap={1}>
-              <Typography fontWeight={700} minWidth={120}>Location</Typography>
+              <Typography fontWeight={700} minWidth={120}><b>Location</b></Typography>
               <Typography>{complaint.location || '—'}</Typography>
             </Box>
 
             <Box display="flex" gap={1}>
-              <Typography fontWeight={700} minWidth={120}>Date Submitted</Typography>
+              <Typography fontWeight={700} minWidth={120}><b>Date Submitted</b></Typography>
               <Typography>{complaint.dateSubmitted || complaint.createdDate || '—'}</Typography>
             </Box>
 
             <Box>
-              <Typography fontWeight={700} mb={0.5}>Description</Typography>
+              <Typography fontWeight={700} mb={0.5}><b>Description</b></Typography>
               <Box sx={{
                 bgcolor: '#f8fafc', borderRadius: 2, p: 2,
                 border: '1px solid', borderColor: 'divider',
@@ -124,7 +124,7 @@ function ComplaintDetails() {
           <Divider sx={{ my: 3 }} />
 
           {/* ── Actions ── */}
-          <Box display="flex" gap={4} flexWrap="wrap">
+          <Box sx={{display:"flex", gap:4, flexWrap: 'wrap'}}>
             <Button
               variant="outlined"
               onClick={() => navigate(isAdmin ? '/admin-complaints' : '/mycomplaints')}
