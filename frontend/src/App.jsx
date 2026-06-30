@@ -83,17 +83,22 @@ function App () {
  
   const updateComplaint = async (updated) => {
     try {
-      const saved = await api.put(`/complaints/${updated.id}`, {
-        status: updated.status,
-        resolution: updated.resolution,
-      });
+      const payload = {};
+      if (updated.title !== undefined) payload.title = updated.title;
+      if (updated.category !== undefined) payload.category = updated.category;
+      if (updated.location !== undefined) payload.location = updated.location;
+      if (updated.description !== undefined) payload.description = updated.description;
+      if (updated.status !== undefined) payload.status = updated.status;
+      if (updated.resolution !== undefined) payload.resolution = updated.resolution;
+
+      const saved = await api.put(`/complaints/${updated.id}`, payload);
       setComplaints(prev => prev.map(c => (c.id === saved.id ? saved : c)));
       return saved;
     } catch (err) {
-      throw new Error
-        (err.message || 'Failed to update complaint.',
-          {cause: err}
-        );
+      throw new Error(
+        err.message || 'Failed to update complaint.',
+        { cause: err }
+      );
     }
   };
  
@@ -126,7 +131,7 @@ function App () {
             
             <Route path="/submit" element={
                 <RoleRoute role="student">
-                  <SubmitComplaint addComplaint={addComplaint} complaints={complaints} />
+                  <SubmitComplaint addComplaint={addComplaint} updateComplaint={updateComplaint} />
                 </RoleRoute>
             } />
 

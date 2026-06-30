@@ -63,19 +63,29 @@ exports.getComplaintById = async (req, res) => {
   }
 };
 
-// PUT /api/complaints/:id  (admin: update status/resolution)
+// PUT /api/complaints/:id  (admin: status/resolution, student: own complaint details)
 exports.updateComplaint = async (req, res) => {
   try {
-    const { status, resolution } = req.body;
+    const { title, category, location, description, status, resolution } = req.body;
     const complaint = await Complaint.findById(req.params.id);
     if (!complaint) return res.status(404).json({ message: 'Complaint not found.' });
 
-    if (req.user.role !== 'admin') {
-      return res.status(403).json({ message: 'Only admin can update complaint status.' });
+    const isAdmin = req.user.role === 'admin';
+    if (!isAdmin && complaint.createdBy.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'Not authorized to update this complaint.' });
     }
 
-    if (status) complaint.status = status;
-    if (resolution !== undefined) complaint.resolution = resolution;
+    if (title !== undefined) complaint.title = title;
+    if (category !== undefined) complaint.category = category;
+    if (location !== undefined) complaint.location = location;
+    if (description !== undefined) complaint.description = description;
+
+    if (isAdmin) {
+      if (status !== undefined) complaint.status = status;
+      if (resolution !== undefined) complaint.resolution = resolution;
+    } else if (status !== undefined || resolution !== undefined) {
+      return res.status(403).json({ message: 'Only admin can update complaint status.' });
+    }
 
     await complaint.save();
     res.json(formatComplaint(complaint));

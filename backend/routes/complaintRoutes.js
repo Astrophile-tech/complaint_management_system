@@ -10,7 +10,7 @@ router.post('/', protect, createComplaint);
 router.get('/', protect, getComplaints);
 router.get('/stats', protect, adminOnly, getStats);
 router.get('/:id', protect, getComplaintById);
-router.put('/:id', protect, adminOnly, updateComplaint);
+router.put('/:id', protect, updateComplaint);
 router.delete('/:id', protect, deleteComplaint);
 
 module.exports = router;

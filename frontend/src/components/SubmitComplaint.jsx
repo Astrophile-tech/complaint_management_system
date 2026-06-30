@@ -1,14 +1,30 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Box, Typography, TextField, MenuItem, Button, Card, CardContent, Alert, CircularProgress } from '@mui/material'
 import { CATEGORIES, PRIMARY, PRIMARY_DARK } from '../utils/Constants'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
-function SubmitComplaint({addComplaint, complaints}) {
+function SubmitComplaint({ addComplaint, updateComplaint }) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const editComplaint = location.state?.editComplaint;
+  const isEditMode = Boolean(editComplaint);
   
   const [values, setValues] = useState({ title: '', category: '', location: '', description: '' })
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (editComplaint) {
+      setValues({
+        title: editComplaint.title || '',
+        category: editComplaint.category || '',
+        location: editComplaint.location || '',
+        description: editComplaint.description || '',
+      });
+    } else {
+      setValues({ title: '', category: '', location: '', description: '' });
+    }
+  }, [editComplaint]);
 
   const handleChange = field => event => {          //update the form state
     setValues(prev => ({...prev, [field]: event.target.value }))
@@ -24,7 +40,11 @@ function SubmitComplaint({addComplaint, complaints}) {
 
      setLoading(true);              // disable submit button to prevent double clicks
     try {
-      await addComplaint(values);       // handled in App.jsx → api.post('/complaints', ...)
+      if (isEditMode) {
+        await updateComplaint({ id: editComplaint.id, ...values });
+      } else {
+        await addComplaint(values);       // handled in App.jsx → api.post('/complaints', ...)
+      }
       navigate('/mycomplaints');
     } catch (err) {
       setError(err.message || 'Failed to submit complaint.');
@@ -43,9 +63,9 @@ function SubmitComplaint({addComplaint, complaints}) {
         borderRadius: 2,
         boxShadow: 2
       }}>
-        <Typography variant="h5" mb={1}>Submit a New Complaint</Typography>
+        <Typography variant="h5" mb={1}>{isEditMode ? 'Edit Complaint' : 'Submit a New Complaint'}</Typography>
         <Typography variant="body2">
-          Fill in the details below to add a complaint to the system.
+          {isEditMode ? 'Update the complaint details below.' : 'Fill in the details below to add a complaint to the system.'}
         </Typography>
       </Box>
 
@@ -94,7 +114,7 @@ function SubmitComplaint({addComplaint, complaints}) {
             
             <Button type="submit" variant="contained" disabled={loading} startIcon={loading && <CircularProgress size={16} color="inherit" />}
              sx={{ bgcolor: PRIMARY, '&:hover': { bgcolor: PRIMARY_DARK } }}>
-               {loading ? 'Submitting…' : 'Submit Complaint'}
+               {loading ? (isEditMode ? 'Updating…' : 'Submitting…') : (isEditMode ? 'Update Complaint' : 'Submit Complaint')}
             </Button>
           </Box>
         </CardContent>
