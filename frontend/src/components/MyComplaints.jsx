@@ -1,12 +1,9 @@
 
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Chip, Button, Card, CardContent, Alert, CircularProgress } from '@mui/material'
-import { useState } from 'react';
+import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Chip, Button, Card, CardContent } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 
-function MyComplaints({complaints, onDeleteComplaint}) {
+function MyComplaints({complaints}) {
   const navigate = useNavigate();
-  const [deleteError, setDeleteError] = useState('');
-  const [deletingId, setDeletingId]   = useState(null);
 
    // Show only this student's complaints
   const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
@@ -25,18 +22,9 @@ function MyComplaints({complaints, onDeleteComplaint}) {
     }
   }
 
-  const handleDelete = async (e, id) => {
-    e.stopPropagation(); // Prevent row click 
-    if (!window.confirm('Delete this complaint?')) return;
-    setDeletingId(id);
-    setDeleteError('');
-    try {
-      await onDeleteComplaint(id);
-    } catch (err) {
-      setDeleteError(err.message || 'Failed to delete complaint.');
-    } finally {
-      setDeletingId(null);
-    }
+  const handleEdit = (e, complaint) => {
+    e.stopPropagation();
+    navigate('/submit', { state: { editComplaint: complaint } });
   };
 
   return (
@@ -51,8 +39,6 @@ function MyComplaints({complaints, onDeleteComplaint}) {
           Click on a complaint to view full details
         </Typography>
       
-      {deleteError && <Alert severity="error" sx={{ mb: 2 }}>{deleteError}</Alert>}
-
       <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
         <Table>
           <TableHead>
@@ -63,8 +49,6 @@ function MyComplaints({complaints, onDeleteComplaint}) {
               <TableCell><b>Date</b></TableCell>
               <TableCell><b>Status</b></TableCell>
               <TableCell><b>Action</b></TableCell>
-              <TableCell></TableCell>
-          
             </TableRow>
           </TableHead>
           <TableBody>
@@ -96,11 +80,9 @@ function MyComplaints({complaints, onDeleteComplaint}) {
                     <Chip label={c.status} color={getStatusColor(c.status)} size="small" sx={{ fontWeight: 600 }} />
                   </TableCell>
                   <TableCell>
-                    
-                    <Button  size="small"  variant="outlined" color="error" disabled={deletingId === c.id} onClick={e => handleDelete(e, c.id)}  startIcon={deletingId === c.id && <CircularProgress size={12} color="inherit" />}>
-                      {deletingId === c.id ? 'Deleting…' : 'Delete'}
+                    <Button size="small" variant="outlined" color="primary" onClick={e => handleEdit(e, c)}>
+                      Edit
                     </Button>
-                    
                   </TableCell>
                 </TableRow>
               ))
