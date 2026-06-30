@@ -1,15 +1,31 @@
 
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Chip, Button, Card, CardContent } from '@mui/material'
+import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Chip, Button, Card, CardContent, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import api from '../utils/api'
 
-function MyComplaints({complaints}) {
+function MyComplaints({complaints, onComplaintDelete}) {
   const navigate = useNavigate();
+  const [openDelete, setOpenDelete] = useState(false);
+  const [complaintToDelete, setComplaintToDelete] = useState(null);
+  const [myComplaints, setMyComplaints] = useState([]);
 
-   // Show only this student's complaints
+  // Initialize local state with complaints
+  useEffect(() => {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    if (currentUser) {
+      const userComplaints = complaints.filter(c => String(c.createdBy) === String(currentUser.id));
+      setMyComplaints(userComplaints);
+    }
+  }, [complaints]);
+
+  // Show only this student's complaints
   const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+  
+  // Update local state when complaints prop changes
   const mine = currentUser
-    ? complaints.filter(c => String(c.createdBy) === String(currentUser.id))
-    : complaints;
+    ? myComplaints.length > 0 ? myComplaints : complaints.filter(c => String(c.createdBy) === String(currentUser.id))
+    : myComplaints.length > 0 ? myComplaints : complaints;
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -25,6 +41,34 @@ function MyComplaints({complaints}) {
   const handleEdit = (e, complaint) => {
     e.stopPropagation();
     navigate('/submit', { state: { editComplaint: complaint } });
+  };
+
+  const handleDeleteClick = (e, complaint) => {
+    e.stopPropagation();
+    setComplaintToDelete(complaint);
+    setOpenDelete(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      await api.del(`/complaints/${complaintToDelete.id}`);
+      // Remove deleted complaint from local state
+      setMyComplaints(myComplaints.filter(c => c.id !== complaintToDelete.id));
+      setOpenDelete(false);
+      setComplaintToDelete(null);
+      // Call parent callback if provided
+      if (onComplaintDelete) {
+        onComplaintDelete(complaintToDelete.id);
+      }
+    } catch (error) {
+      console.error('Error deleting complaint:', error);
+      alert('Failed to delete complaint: ' + error.message);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setOpenDelete(false);
+    setComplaintToDelete(null);
   };
 
   return (
@@ -80,9 +124,14 @@ function MyComplaints({complaints}) {
                     <Chip label={c.status} color={getStatusColor(c.status)} size="small" sx={{ fontWeight: 600 }} />
                   </TableCell>
                   <TableCell>
-                    <Button size="small" variant="outlined" color="primary" onClick={e => handleEdit(e, c)}>
-                      Edit
-                    </Button>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Button size="small" variant="outlined" color="primary" onClick={e => handleEdit(e, c)}>
+                        Edit
+                      </Button>
+                      <Button size="small" variant="outlined" color="error" onClick={e => handleDeleteClick(e, c)}>
+                        Delete
+                      </Button>
+                    </Box>
                   </TableCell>
                 </TableRow>
               ))
@@ -92,6 +141,26 @@ function MyComplaints({complaints}) {
       </TableContainer>
       </CardContent>
     </Card>
+
+    <Dialog open={openDelete} onClose={handleCancelDelete}>
+      <DialogTitle>Delete Complaint</DialogTitle>
+      <DialogContent>
+        Are you sure you want to delete this complaint? This action cannot be undone.
+        {complaintToDelete && (
+          <Typography variant="body2" sx={{ mt: 2, color: 'text.secondary' }}>
+            Complaint ID: {String(complaintToDelete.id).slice(-6).toUpperCase()} - {complaintToDelete.title}
+          </Typography>
+        )}
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleCancelDelete} color="primary">
+          Cancel
+        </Button>
+        <Button onClick={handleConfirmDelete} color="error" variant="contained">
+          Delete
+        </Button>
+      </DialogActions>
+    </Dialog>
     </Box>
   )
 }
