@@ -38,7 +38,7 @@ const DashboardLayout = () => {
         <Toolbar>
           <Box sx={{flexGrow:1, display:'flex', alignItems:'center'}}>
             <SecurityIcon sx={{ fontSize: 40 }}/>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: '', fontWeight: 'bold', fontFamily: 'Playfair Display', letterSpacing: 2 }}>          
+          <Typography variant="h5" component="div" sx={{ flexGrow: 1, textAlign: '', fontWeight: 'bold', fontFamily: 'Playfair Display', letterSpacing: 2 }}>          
             COMPLAINT CONNECT
           </Typography>
         </Box>

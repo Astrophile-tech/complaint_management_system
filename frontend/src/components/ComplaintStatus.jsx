@@ -54,7 +54,7 @@ function ComplaintStatus() {
         <CardContent sx={{ p: 4 }}>
  
           {/* ── Header ── */}
-          <Typography variant="h4" sx={{ flexGrow: 1, textAlign: '', fontWeight: 'bold', fontFamily: 'Playfair Display', letterSpacing: 2 }}>
+          <Typography variant="h4" color='primary' sx={{ flexGrow: 1, textAlign: '', fontWeight: 'bold', fontFamily: 'Playfair Display', letterSpacing: 2 }}>
             Complaint Tracking
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
@@ -64,25 +64,25 @@ function ComplaintStatus() {
           <Divider sx={{ mb: 3 }} />
  
           {/* ── Info ── */}
-          <Box display="flex" gap={4} flexWrap="wrap" mb={3}>
+          <Box sx={{display:"flex", gap:4, flexWrap:"wrap", mb:3, justifyContent:'center'}}>
             <Box>
-              <Typography variant="caption" color="text.secondary" fontWeight={700}
+              <Typography variant="subtitle2" color="text.secondary" fontWeight={700}
                 sx={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                Complaint ID
+                <b>Complaint ID</b>
               </Typography>
               <Typography fontFamily="monospace" fontWeight={600}>#{shortId}</Typography>
             </Box>
             <Box>
-              <Typography variant="caption" color="text.secondary" fontWeight={700}
+              <Typography variant="subtitle2" color="text.secondary" fontWeight={700}
                 sx={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                Title
+                <b>Title</b>
               </Typography>
               <Typography fontWeight={600}>{complaint.title}</Typography>
             </Box>
             <Box>
-              <Typography variant="caption" color="text.secondary" fontWeight={700}
+              <Typography variant="subtitle2" color="text.secondary" fontWeight={700}
                 sx={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                Current Status
+                <b>Current Status</b>
               </Typography>
               <Box mt={0.5}>{statusChip(complaint.status)}</Box>
             </Box>

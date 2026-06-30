@@ -91,7 +91,7 @@ const StatusUpdateScreen = ({ complaints, onUpdateComplaint }) => {
 
       {/* Update dialog */}
       <Dialog open={!!selected} onClose={closeDialog} fullWidth maxWidth="sm">
-        <DialogTitle>Update Status — {String(selected?.id).slice(-6).toUpperCase()}</DialogTitle>
+        <DialogTitle><b>Update Status </b>— {String(selected?.id).slice(-6).toUpperCase()}</DialogTitle>
         <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
           {saved && <Alert severity="success">Saved!</Alert>}
           {saveError && <Alert severity="error">{saveError}</Alert>}

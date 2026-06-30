@@ -128,7 +128,7 @@ const AdminDashboard = ({ complaints = [] , users = [] }) => {
         <Grid item xs={12} md={6}>
           <Card sx={{ borderRadius: 4, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', height: '100%',width:355, transition: 'transform 0.2s, box-shadow 0.2s', '&:hover': { transform: 'translateY(-4px)', boxShadow: '0 12px 32px rgba(0,0,0,0.12)' } }}>
             <CardContent>
-              <Typography variant="subtitle1" fontWeight={700} gutterBottom>Complaints by Category</Typography>
+              <Typography variant="caption" fontWeight={700} gutterBottom sx={{ textTransform: "uppercase", letterSpacing: "0.5px" }}>Complaints by Category</Typography>
               {barData.length === 0 ? (
                 <Box textAlign="center" py={4}><Typography color="text.secondary">No data</Typography></Box>
               ) : (
@@ -150,7 +150,7 @@ const AdminDashboard = ({ complaints = [] , users = [] }) => {
         <Grid item xs={12} md={6}>
           <Card sx={{ borderRadius: 4, boxShadow: '0 4px 20px rgba(0,0,0,0.08)', height: '100%',width: 355, transition: 'transform 0.2s, box-shadow 0.2s', '&:hover': { transform: 'translateY(-4px)', boxShadow: '0 12px 32px rgba(0,0,0,0.12)' } }}>
             <CardContent>
-              <Typography variant="subtitle1" fontWeight={700} gutterBottom>Status Distribution</Typography>
+              <Typography variant="caption" fontWeight={700} gutterBottom sx={{ textTransform: "uppercase", letterSpacing: "0.5px" }}>Status Distribution</Typography>
               {total === 0 ? (
                 <Box textAlign="center" py={4}><Typography color="text.secondary">No data</Typography></Box>
               ) : (
